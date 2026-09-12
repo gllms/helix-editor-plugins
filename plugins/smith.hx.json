@@ -1,0 +1,5 @@
+{
+  "description": "A declarative Helix plugin manager backed by Steel's Forge",
+  "repository": "kn66/smith.hx",
+  "tags": ["plugin-manager", "utility"]
+}

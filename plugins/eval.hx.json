@@ -1,0 +1,5 @@
+{
+  "description": "A REPL scratch buffer for Steel eval-string output in Helix",
+  "repository": "waddie/eval.hx",
+  "tags": ["editing", "integration"]
+}

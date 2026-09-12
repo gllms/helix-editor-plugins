@@ -1,0 +1,5 @@
+{
+  "description": "Vim bindings for helix",
+  "repository": "mattwparas/vim.hx",
+  "tags": ["editing", "integration", "keys"]
+}

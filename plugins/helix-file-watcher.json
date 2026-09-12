@@ -1,0 +1,5 @@
+{
+  "description": "Watch current directory for file changes and reload buffers automatically",
+  "repository": "mattwparas/helix-file-watcher",
+  "tags": ["files", "integration", "utility", "workflow"]
+}

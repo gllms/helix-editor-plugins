@@ -1,0 +1,5 @@
+{
+  "description": "Extend the selection by one tree-sitter sibling node",
+  "repository": "waddie/extend-sibling.hx",
+  "tags": ["editing", "navigation"]
+}

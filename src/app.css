@@ -1,0 +1,120 @@
+:root {
+  --purple-dark: #281733;
+  --purple-light: #a4a0e8;
+  --grey: #bcbcbc;
+
+  --font-display: "SN Pro", sans-serif;
+
+  --surface-1: rgba(255, 255, 255, 0.1);
+  --surface-2: rgba(0, 0, 0, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+
+  --gap-xs: 0.25rem;
+  --gap-sm: 0.5rem;
+  --gap-md: 1rem;
+  --gap-lg: 1.5rem;
+
+  --shadow-sm: 0 1rem 1rem rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1.5rem 2.25rem rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 1.45rem 2rem rgba(0, 0, 0, 0.35);
+
+  --transition-base: 0.3s;
+  --transition-fast: 0.2s;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  margin-bottom: 5rem; /* Leave room for the FAB so it doesn't overlap the footer */
+  min-height: 100vh;
+  background: var(--purple-dark);
+  color: var(--purple-light);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+main {
+  padding: 2rem;
+  max-width: max(75rem, 50vw);
+  margin: 0 auto;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display);
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+  font-size: clamp(3rem, 2.0769rem + 2.5641vw, 4rem);
+  font-weight: 800;
+  text-align: center;
+  text-shadow:
+    0 0 1.25rem rgba(255, 255, 255, 0.2),
+    0 0 4.5rem rgba(255, 255, 255, 0.3);
+}
+
+h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+  color: var(--grey);
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--purple-light);
+
+  &:visited {
+    color: var(--purple-light);
+  }
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button,
+select,
+input {
+  --scale: 1;
+  --rotate: 0deg;
+
+  transform: rotate(var(--rotate)) scale(var(--scale));
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      transform var(--transition-base),
+      width var(--transition-base),
+      filter var(--transition-base),
+      box-shadow var(--transition-base);
+
+    &:hover, &:focus {
+      filter: brightness(1.25);
+      --scale: 1.05;
+      box-shadow: var(--shadow-md);
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  main {
+    padding: 1rem;
+  }
+}

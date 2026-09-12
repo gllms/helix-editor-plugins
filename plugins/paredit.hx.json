@@ -1,0 +1,5 @@
+{
+  "description": "Structural editing for Lisp languages in Helix",
+  "repository": "waddie/paredit.hx",
+  "tags": ["editing", "language-support"]
+}

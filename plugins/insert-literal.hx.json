@@ -1,0 +1,5 @@
+{
+  "description": "Insert the next keypress literally, or suppress auto-pairing",
+  "repository": "waddie/insert-literal.hx",
+  "tags": ["editing", "keys"]
+}

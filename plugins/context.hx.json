@@ -1,0 +1,5 @@
+{
+  "description": "Tree-sitter breadcrumbs with proper context queries for Helix",
+  "repository": "codeberg:gwid/context.hx",
+  "tags": ["ui"]
+}

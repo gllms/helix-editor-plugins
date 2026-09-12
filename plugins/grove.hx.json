@@ -1,0 +1,5 @@
+{
+  "description": "A docked file tree for Helix, inspired by Zed’s project panel",
+  "repository": "ivoronin/grove.hx",
+  "tags": ["files", "ui"]
+}

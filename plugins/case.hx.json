@@ -1,0 +1,5 @@
+{
+  "description": "A Helix plugin for changing keyword case",
+  "repository": "apothecary103/case.hx",
+  "tags": ["editing"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Switch between `.cpp` and `.h` files with the same base name",
+  "repository": "godalming123/switcheroo.hx",
+  "tags": ["files", "language-support", "navigation"]
+}

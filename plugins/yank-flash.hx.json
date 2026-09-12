@@ -1,0 +1,5 @@
+{
+  "description": "Visual feedback on yank",
+  "repository": "dmyyy/yank-flash.hx",
+  "tags": ["animation", "ui"]
+}

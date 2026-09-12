@@ -1,0 +1,5 @@
+{
+  "description": "A splash screen plugin for helix",
+  "repository": "mattwparas/splash.hx",
+  "tags": ["ui"]
+}

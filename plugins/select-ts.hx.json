@@ -1,0 +1,5 @@
+{
+  "description": "Create selections in Helix from an ad hoc tree-sitter query",
+  "repository": "waddie/select-ts.hx",
+  "tags": ["editing", "search"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "A notification engine for Helix",
+  "repository": "chuwy/notify.hx",
+  "tags": ["ui", "utility"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Restores group-wise rotation of selection contents in Helix",
+  "repository": "waddie/ogre.hx",
+  "tags": ["editing"]
+}

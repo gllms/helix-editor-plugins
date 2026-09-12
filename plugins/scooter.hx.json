@@ -1,0 +1,5 @@
+{
+  "description": "Interactive find-and-replace",
+  "repository": "thomasschafer/scooter.hx",
+  "tags": ["editing", "search", "ui"]
+}

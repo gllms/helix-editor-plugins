@@ -1,0 +1,5 @@
+{
+  "description": "A file manager plugin for Helix that lets you edit your filesystem like a buffer",
+  "repository": "Ra77a3l3-jar/oil.hx",
+  "tags": ["files", "ui"]
+}

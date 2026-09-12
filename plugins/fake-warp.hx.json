@@ -1,0 +1,5 @@
+{
+  "description": "Trigger terminal cursor animations for block cursors",
+  "repository": "Xerxes-2/fake-warp.hx",
+  "tags": ["animation", "terminal", "ui"]
+}

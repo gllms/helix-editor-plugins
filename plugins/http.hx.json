@@ -1,0 +1,5 @@
+{
+  "description": "A minimal HTTP client for Helix, using VS Code REST client syntax",
+  "repository": "waddie/http.hx",
+  "tags": ["integration", "utility"]
+}

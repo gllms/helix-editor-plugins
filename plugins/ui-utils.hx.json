@@ -1,0 +1,5 @@
+{
+  "description": "Shared UI functions for building Helix Steel plugins",
+  "repository": "waddie/ui-utils.hx",
+  "tags": ["ui", "utility"]
+}

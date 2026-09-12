@@ -1,0 +1,5 @@
+{
+  "description": "Fuzzy-find a project to set as Helix's working directory",
+  "repository": "godalming123/select-project.hx",
+  "tags": ["navigation", "search", "ui", "workflow"]
+}

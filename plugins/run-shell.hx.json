@@ -1,0 +1,5 @@
+{
+  "description": "A blocking version of :run-shell-command for Helix",
+  "repository": "waddie/run-shell.hx",
+  "tags": ["integration", "terminal", "utility"]
+}

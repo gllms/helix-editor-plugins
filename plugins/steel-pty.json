@@ -1,0 +1,5 @@
+{
+  "description": "Open a terminal inside Helix",
+  "repository": "mattwparas/steel-pty",
+  "tags": ["integration", "terminal", "ui", "workflow"]
+}

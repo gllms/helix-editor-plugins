@@ -1,0 +1,5 @@
+{
+  "description": "An ASCII-rendered LaTeX preview plugin for Helix",
+  "repository": "daynardn/HeTeX.hx",
+  "tags": ["language-support", "ui"]
+}

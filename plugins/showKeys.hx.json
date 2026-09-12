@@ -1,0 +1,5 @@
+{
+  "description": "Display pressed keys on screen",
+  "repository": "HeitorAugustoLN/showkeys.hx",
+  "tags": ["keys", "ui", "utility"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Modeline plugin for Helix",
+  "repository": "codeberg:gwid/modeline.hx",
+  "tags": ["utility", "workflow"]
+}

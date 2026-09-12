@@ -1,0 +1,5 @@
+{
+  "description": "Generate code screenshots from your Helix selections, powered by Silicon",
+  "repository": "Vyrnexis/codesnap.hx",
+  "tags": ["ui", "utility"]
+}

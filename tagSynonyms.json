@@ -1,0 +1,18 @@
+[
+  ["animation", "motion", "effects", "transitions"],
+  ["editing", "text", "writing"],
+  ["files", "file-management", "file-organization", "folders", "directories", "paths"],
+  ["integration", "third-party", "external", "interoperability"],
+  ["keys", "keyboard", "keymap", "shortcuts", "hotkeys", "keybindings", "input"],
+  ["language-support", "tooling", "programming", "development"],
+  ["navigation", "movement", "switching", "jumping"],
+  ["notes", "note-taking", "documentation", "journaling", "todos", "tasks"],
+  ["plugin-manager", "plugins", "extensions", "add-ons", "packages"],
+  ["search", "find", "lookup", "query", "selection", "selecting", "grep"],
+  ["stats", "statistics", "metrics", "analytics"],
+  ["terminal", "shell", "pty", "console", "cli"],
+  ["ui", "user-interface", "design", "layout", "theme", "appearance", "visuals", "display", "style", "styling"],
+  ["utility", "utilities", "tools", "helpers"],
+  ["version-control", "vcs", "git", "source-control", "version-control-system"],
+  ["workflow", "productivity", "efficiency", "process"]
+]

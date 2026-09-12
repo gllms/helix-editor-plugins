@@ -1,0 +1,5 @@
+{
+  "description": "Augments Helix with extra functionality from the Roslyn C# LSP",
+  "repository": "jdrst/csharp-hx",
+  "tags": ["integration", "language-support"]
+}

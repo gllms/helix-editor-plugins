@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Mirrors the site's h1 text-shadow: 0 0 1.25rem rgba(255,255,255,.2), 0 0 4.5rem rgba(255,255,255,.3) -->
+    <filter id="glow" x="-75%" y="-75%" width="250%" height="250%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur1"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.2" result="color1"/>
+      <feComposite in="color1" in2="blur1" operator="in" result="glow1"/>
+
+      <feGaussianBlur in="SourceAlpha" stdDeviation="36" result="blur2"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.3" result="color2"/>
+      <feComposite in="color2" in2="blur2" operator="in" result="glow2"/>
+
+      <feMerge>
+        <feMergeNode in="glow2"/>
+        <feMergeNode in="glow1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#281733"/>
+  <rect width="1200" height="630" fill="url(#bgGlow)"/>
+
+  <!-- "Puzzle Piece" icon from Phosphor Icons (https://phosphoricons.com), MIT licensed -->
+  <g transform="translate(546, 156) scale(0.43)" fill="#a4a0e8" filter="url(#glow)">
+    <path d="M222.41,155.16a12,12,0,0,0-11.56-.69A16,16,0,0,1,188,139,16.2,16.2,0,0,1,202.8,124a15.83,15.83,0,0,1,8,1.5A12,12,0,0,0,228,114.7V72a20,20,0,0,0-20-20H176a40.15,40.15,0,0,0-12.62-29.16,39.67,39.67,0,0,0-29.94-10.76,40.08,40.08,0,0,0-37.34,37C96,50.07,96,51,96,52H64A20,20,0,0,0,44,72v28a40.15,40.15,0,0,0-29.16,12.62A40,40,0,0,0,41.1,179.9a28.3,28.3,0,0,0,2.9.1v28a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V165.31A12,12,0,0,0,222.41,155.16ZM204,204H68V165.31a12,12,0,0,0-17.15-10.84A15.9,15.9,0,0,1,42.8,156,16.2,16.2,0,0,1,28,141.06a16,16,0,0,1,22.82-15.52A12,12,0,0,0,68,114.7V76h42.7a12,12,0,0,0,10.83-17.15A15.9,15.9,0,0,1,120,50.8,16.19,16.19,0,0,1,134.94,36a16,16,0,0,1,15.53,22.81A12,12,0,0,0,161.31,76H204v24c-1,0-1.93,0-2.9.11A40,40,0,0,0,204,180h0Z"/>
+  </g>
+
+  <text x="600" y="400" text-anchor="middle" font-family="SN Pro" font-size="72" font-weight="800" fill="#a4a0e8" filter="url(#glow)">Helix Editor Plugins</text>
+  <text x="600" y="452" text-anchor="middle" font-family="SN Pro" font-size="30" font-weight="400" fill="#bcbcbc">A searchable list of plugins for the Helix text editor</text>
+</svg>
