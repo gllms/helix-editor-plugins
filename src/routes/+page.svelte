@@ -65,107 +65,115 @@
 
 <h1>Helix Editor Plugins</h1>
 
-<div class="search-container">
-  <input type="search" placeholder="Search..." bind:value={searchQuery} />
-  <select bind:value={sortBy} title="Sort by">
-    <option value="magic">Magic</option>
-    <option value="star_count">Stars</option>
-    <option value="updated_at">Last updated</option>
-    <option value="created_at">Created</option>
-    <option value="name">Name</option>
-  </select>
-  <button
-    onclick={() => (sortDirection = sortDirection === "asc" ? "desc" : "asc")}
-    style:--rotate={sortDirection === "asc" ? "360deg" : ""}
-    aria-label={`Toggle sort direction (currently ${sortDirection === "asc" ? "ascending" : "descending"})`}>
-    {#if sortDirection === "asc"}
-      <IconSortAscendingBold />
-    {:else}
-      <IconSortDescendingBold />
-    {/if}
-  </button>
-</div>
+<div class="layout">
+  <aside class="filters">
+    <div class="search-container">
+      <input type="search" placeholder="Search..." bind:value={searchQuery} />
+      <div class="sort-controls">
+        <select bind:value={sortBy} title="Sort by">
+          <option value="magic">Magic</option>
+          <option value="star_count">Stars</option>
+          <option value="updated_at">Last updated</option>
+          <option value="created_at">Created</option>
+          <option value="name">Name</option>
+        </select>
+        <button
+          onclick={() => (sortDirection = sortDirection === "asc" ? "desc" : "asc")}
+          style:--rotate={sortDirection === "asc" ? "360deg" : ""}
+          aria-label={`Toggle sort direction (currently ${sortDirection === "asc" ? "ascending" : "descending"})`}>
+          {#if sortDirection === "asc"}
+            <IconSortAscendingBold />
+          {:else}
+            <IconSortDescendingBold />
+          {/if}
+        </button>
+      </div>
+    </div>
 
-{#if Object.keys(tagCounts).length > 0}
-  <div class="tags-container">
-    {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]) as [tag, count]}
-      <button
-        class="pill"
-        onclick={() => (searchQuery = "#" + tag)}
-        aria-label={`Search by tag: ${tag}`}>
-        <IconHashBold />
-        <span>
-          {tag}
-        </span>
-        <span class="pill-count">
-          {count}
-        </span>
-      </button>
-    {/each}
-  </div>
-{/if}
-
-{#if sortedPlugins.length === 0}
-  <p class="empty-state">
-    {#if searchQuery}
-      No plugins found for &ldquo;{searchQuery}&rdquo;.
-    {:else}
-      No plugins found.
+    {#if Object.keys(tagCounts).length > 0}
+      <div class="tags-container">
+        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]) as [tag, count]}
+          <button
+            class="pill"
+            onclick={() => (searchQuery = "#" + tag)}
+            aria-label={`Search by tag: ${tag}`}>
+            <IconHashBold />
+            <span>
+              {tag}
+            </span>
+            <span class="pill-count">
+              {count}
+            </span>
+          </button>
+        {/each}
+      </div>
     {/if}
-  </p>
-{:else}
-  <ul>
-    {#each sortedPlugins as plugin (plugin.name)}
-      {@const source = getRepositorySource(plugin.repository)}
-      <li
-        in:motionTransition={{ fn: scale, start: 0.9 }}
-        out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
-        animate:motionAnimation={{ fn: flip, duration: 400 }}>
-        <a href={plugin.url} target="_blank">
-          <h2>{plugin.name}</h2>
-          <p>{plugin.description}</p>
-          <div class="pill-container">
-            <span class="pill">
-              <source.icon />
-              {getRepositoryPath(plugin.repository)}
-            </span>
-            <span class="pill">
-              <IconStarFill />
-              {plugin.star_count}
-            </span>
-            <span
-              class="pill"
-              title="Created: {plugin.created_at.toLocaleString()}">
-              <IconAsteriskBold />
-              {timeAgo(plugin.created_at)}
-            </span>
-            <span
-              class="pill"
-              title="Last push: {plugin.updated_at.toLocaleString()}">
-              <IconGitCommitFill />
-              {timeAgo(plugin.updated_at)}
-            </span>
-            {#if plugin.tags?.length}
-              {#each plugin.tags.toSorted() as tag (tag)}
-                <button
+  </aside>
+
+  <div class="content">
+    {#if sortedPlugins.length === 0}
+      <p class="empty-state">
+        {#if searchQuery}
+          No plugins found for &ldquo;{searchQuery}&rdquo;.
+        {:else}
+          No plugins found.
+        {/if}
+      </p>
+    {:else}
+      <ul>
+        {#each sortedPlugins as plugin (plugin.name)}
+          {@const source = getRepositorySource(plugin.repository)}
+          <li
+            in:motionTransition={{ fn: scale, start: 0.9 }}
+            out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
+            animate:motionAnimation={{ fn: flip, duration: 400 }}>
+            <a href={plugin.url} target="_blank">
+              <h2>{plugin.name}</h2>
+              <p>{plugin.description}</p>
+              <div class="pill-container">
+                <span class="pill">
+                  <source.icon />
+                  {getRepositoryPath(plugin.repository)}
+                </span>
+                <span class="pill">
+                  <IconStarFill />
+                  {plugin.star_count}
+                </span>
+                <span
                   class="pill"
-                  onclick={(e) => {
-                    e.preventDefault();
-                    searchQuery = "#" + tag;
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  aria-label={`Search by tag: ${tag}`}>
-                  <IconHashBold />
-                  {tag}
-                </button>
-              {/each}
-            {/if}
-          </div>
-        </a>
-      </li>
-    {/each}
-  </ul>
-{/if}
+                  title="Created: {plugin.created_at.toLocaleString()}">
+                  <IconAsteriskBold />
+                  {timeAgo(plugin.created_at)}
+                </span>
+                <span
+                  class="pill"
+                  title="Last push: {plugin.updated_at.toLocaleString()}">
+                  <IconGitCommitFill />
+                  {timeAgo(plugin.updated_at)}
+                </span>
+                {#if plugin.tags?.length}
+                  {#each plugin.tags.toSorted() as tag (tag)}
+                    <button
+                      class="pill"
+                      onclick={(e) => {
+                        e.preventDefault();
+                        searchQuery = "#" + tag;
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                      aria-label={`Search by tag: ${tag}`}>
+                      <IconHashBold />
+                      {tag}
+                    </button>
+                  {/each}
+                {/if}
+              </div>
+            </a>
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
+</div>
 
 <footer>
   <p>
@@ -193,16 +201,38 @@
 </div>
 
 <style>
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-lg);
+    align-items: start;
+
+    @media (min-width: 60rem) {
+      grid-template-columns: 18rem 1fr;
+    }
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+
+    @media (min-width: 60rem) {
+      position: sticky;
+      top: var(--gap-lg);
+    }
+  }
+
   .search-container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
     gap: var(--gap-sm);
-    margin-bottom: var(--gap-lg);
     font-family: var(--font-display);
     font-weight: 700;
 
-    > :where(input, select, button) {
+    :where(input, select, button) {
       background: var(--surface-1);
       border: none;
       color: var(--grey);
@@ -215,14 +245,21 @@
     }
 
     input {
-      min-width: 0rem;
-      width: 32rem;
+      flex: 1 1 12rem;
+      min-width: 8rem;
+      max-width: 32rem;
       margin-right: auto;
       border: 2px solid var(--border-subtle);
     }
 
     input:placeholder-shown:not(:focus) {
-      width: 12rem;
+      flex-basis: 12rem;
+    }
+
+    .sort-controls {
+      display: flex;
+      flex-shrink: 0;
+      gap: var(--gap-sm);
     }
 
     button {
@@ -234,6 +271,25 @@
         transition: transform var(--transition-fast) ease-out;
       }
     }
+
+    @media (min-width: 60rem) {
+      justify-content: stretch;
+
+      input,
+      input:placeholder-shown:not(:focus) {
+        flex-basis: 100%;
+        max-width: none;
+        margin-right: 0;
+      }
+
+      .sort-controls {
+        width: 100%;
+      }
+
+      select {
+        flex: 1;
+      }
+    }
   }
 
   .tags-container {
@@ -241,7 +297,10 @@
     align-items: center;
     flex-wrap: wrap;
     gap: var(--gap-sm);
-    margin-bottom: var(--gap-lg);
+  }
+
+  .content {
+    min-width: 0;
   }
 
   .empty-state {

@@ -44,7 +44,7 @@ body {
 
 main {
   padding: 2rem;
-  max-width: max(75rem, 50vw);
+  max-width: max(100rem, 50vw);
   margin: 0 auto;
 }
 
