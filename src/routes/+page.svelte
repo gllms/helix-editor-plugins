@@ -229,7 +229,7 @@
     align-items: center;
     justify-content: flex-end;
     gap: var(--gap-sm);
-    font-family: var(--font-display);
+    font-family: var(--font-display-700);
     font-weight: 700;
 
     :where(input, select, button) {
@@ -240,7 +240,7 @@
       height: 2.5rem;
       border-radius: var(--radius-md);
       font-size: inherit;
-      font-family: var(--font-display);
+      font-family: var(--font-display-700);
       font-weight: 700;
     }
 
@@ -366,7 +366,7 @@
     border: none;
     font-size: inherit;
     /* font-family: inherit; */
-    font-family: var(--font-display);
+    font-family: var(--font-display-500);
     font-weight: 500;
 
     :global(svg) {
@@ -381,6 +381,7 @@
       border-radius: 0.3rem;
       color: var(--purple-dark);
       font-size: 0.75em;
+      font-family: var(--font-display-900);
       font-weight: 900;
     }
   }
