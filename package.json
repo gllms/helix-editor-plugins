@@ -5,12 +5,15 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "predev": "npm run fonts:fetch",
     "dev": "vite dev",
+    "prebuild": "npm run fonts:fetch",
     "build": "vite build",
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "fonts:fetch": "node scripts/fetch-fonts.mjs",
     "generate:og-image": "node scripts/og-image/generate.mjs"
   },
   "devDependencies": {

@@ -8,6 +8,9 @@ node_modules
 /.svelte-kit
 /build
 
+# Fetched at build time, see scripts/fetch-fonts.mjs
+/static/fonts
+
 # OS
 .DS_Store
 Thumbs.db
