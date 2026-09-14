@@ -449,8 +449,11 @@
     .fab-small {
       width: 2.5rem;
       height: 2.5rem;
-      translate: 0 calc(100% + var(--gap));
       z-index: -1;
+
+      @media (prefers-reduced-motion: no-preference) {
+        translate: 0 calc(100% + var(--gap));
+      }
     }
 
     &:hover .fab-small,
