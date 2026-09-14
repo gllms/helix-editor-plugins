@@ -400,6 +400,11 @@
       font-size: 0.75em;
       font-family: var(--font-display-900);
       font-weight: 900;
+
+      &::selection {
+        background: var(--purple-dark);
+        color: var(--purple-light);
+      }
     }
   }
 

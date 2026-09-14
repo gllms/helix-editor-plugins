@@ -33,6 +33,11 @@
   box-sizing: border-box;
 }
 
+::selection {
+  background: var(--purple-light);
+  color: var(--purple-dark);
+}
+
 body {
   margin: 0;
   margin-bottom: 5rem; /* Leave room for the FAB so it doesn't overlap the footer */
