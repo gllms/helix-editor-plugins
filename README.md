@@ -1,10 +1,10 @@
 # helix-editor-plugins
 
-This is the source code for [helix-editor-plugins.com](https://helix-editor-plugins.com). It's a [SvelteKit](https://svelte.dev/docs/kit/introduction) project that compiles to static files served by Github Pages. The plugin data comes from the JSON files in the /plugins directory, enriched with data from Github's API during compilation.
+This is the source code for [helix-editor-plugins.com](https://helix-editor-plugins.com). It's a [SvelteKit](https://svelte.dev/docs/kit/introduction) project that compiles to static files served by Github Pages. The plugin data comes from the JSON files in the /plugins directory, enriched with data from APIs during compilation.
 
 ## Contributing
 
-If you want to add or update a plugin, simply add or update the corresponding JSON file in the /plugins directory and submit a pull request. After your PR is merged, a GitHub Actions workflow will automatically rebuild the site and deploy the changes.
+If you want to add or update a plugin, simply add or update the corresponding JSON file in the /plugins directory and submit a pull request. The title of the file will be used as the plugin's name. After your PR is merged, a GitHub Actions workflow will automatically rebuild the site and deploy the changes.
 
 By default, a repository in the format `username/repo` is assumed to be on GitHub. If the plugin is hosted somewhere else, you can prefix the repository name with one of the following prefixes, for example `codeberg:username/repo`.
 
