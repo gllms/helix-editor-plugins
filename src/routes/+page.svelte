@@ -63,7 +63,14 @@
   {@html `<script type="application/ld+json">${jsonLd}</script>`}
 </svelte:head>
 
-<h1>Helix Editor Plugins</h1>
+<h1>
+  <button
+    onclick={() => (searchQuery = "")}
+    title="Clear search"
+    aria-label="Clear search">
+    Helix Editor Plugins
+  </button>
+</h1>
 
 <div class="layout">
   <aside class="filters">
@@ -201,6 +208,16 @@
 </div>
 
 <style>
+  h1 button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
   .layout {
     display: grid;
     grid-template-columns: 1fr;
