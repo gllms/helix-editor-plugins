@@ -3,7 +3,7 @@
   ["editing", "text", "writing"],
   ["files", "file-management", "file-organization", "folders", "directories", "paths"],
   ["integration", "third-party", "external", "interoperability"],
-  ["keys", "keyboard", "keymap", "shortcuts", "hotkeys", "keybindings", "input"],
+  ["keys", "keyboard", "keymap", "shortcuts", "hotkeys", "keybindings", "keybinds", "input"],
   ["language-support", "tooling", "programming", "development"],
   ["navigation", "movement", "switching", "jumping"],
   ["notes", "note-taking", "documentation", "journaling", "todos", "tasks"],
