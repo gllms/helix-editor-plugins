@@ -33,9 +33,32 @@
   box-sizing: border-box;
 }
 
+html {
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--purple-light) var(--purple-dark);
+}
+
 ::selection {
   background: var(--purple-light);
   color: var(--purple-dark);
+}
+
+::-webkit-scrollbar {
+  width: 0.875rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--purple-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--purple-light);
+  border-radius: var(--radius-sm);
+  border: 0.1875rem solid var(--purple-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  filter: brightness(1.25);
 }
 
 body {
