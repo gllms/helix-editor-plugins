@@ -11,6 +11,10 @@ node_modules
 # Fetched at build time, see scripts/fetch-fonts.mjs
 /static/fonts
 
+# Generated at build time, see scripts/favicon/generate.mjs and scripts/og-image/generate.mjs
+/static/favicon.ico
+/static/og-image.png
+
 # OS
 .DS_Store
 Thumbs.db
