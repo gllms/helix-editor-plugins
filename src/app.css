@@ -139,7 +139,7 @@ input {
       filter var(--transition-base),
       box-shadow var(--transition-base);
 
-    &:hover, &:focus {
+    &:hover, &:not(button):focus {
       filter: brightness(1.25);
       --scale: 1.05;
       box-shadow: var(--shadow-md);
