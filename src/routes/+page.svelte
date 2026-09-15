@@ -12,6 +12,8 @@
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
+  import IconDotsThreeBold from "phosphor-icons-svelte/IconDotsThreeBold.svelte";
+  import IconCaretLeftBold from "phosphor-icons-svelte/IconCaretLeftBold.svelte";
   import IconGithubLogoFill from "phosphor-icons-svelte/IconGithubLogoFill.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
@@ -20,6 +22,7 @@
   import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
   import previouslyBlurred from "$lib/previouslyBlurred";
   import HelpDialog from "$lib/HelpDialog.svelte";
+  import { MediaQuery } from "svelte/reactivity";
 
   const plugins = await getPlugins();
 
@@ -30,6 +33,8 @@
   let searchQuery = $state<string>("");
   let sortBy = $state<keyof IPlugin | "magic">("magic");
   let sortDirection = $state<"asc" | "desc">("desc");
+  let tagsCollapsed = $state<boolean>(true);
+  const COLLAPSED_TAG_COUNT = 10;
 
   const tagCounts: Record<string, number> = {};
 
@@ -38,6 +43,8 @@
       tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
     }
   }
+
+	const isSmallScreen = new MediaQuery('max-width: 576px');
 
   let sortedPlugins = $derived(
     filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection),
@@ -116,7 +123,7 @@
 
     {#if Object.keys(tagCounts).length > 0}
       <div class="tags-container">
-        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]) as [tag, count]}
+        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed && isSmallScreen.current ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
           <button
             class="pill"
             onclick={() => (searchQuery = "#" + tag)}
@@ -130,6 +137,18 @@
             </span>
           </button>
         {/each}
+        {#if Object.keys(tagCounts).length > COLLAPSED_TAG_COUNT && isSmallScreen.current}
+          <button
+            class="pill pill-colored"
+            onclick={() => (tagsCollapsed = !tagsCollapsed)}
+            aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}>
+            {#if tagsCollapsed}
+              <IconDotsThreeBold />
+            {:else}
+              <IconCaretLeftBold />
+            {/if}
+          </button>
+        {/if}
       </div>
     {/if}
   </aside>
@@ -411,9 +430,20 @@
     /* font-family: inherit; */
     font-family: var(--font-display-500);
     font-weight: 500;
+    height: 1lh;
+    box-sizing: content-box;
 
     :global(svg) {
       color: var(--purple-light);
+    }
+
+    &.pill-colored {
+      background: var(--purple-light);
+      color: var(--purple-dark);
+
+      :global(svg) {
+        color: var(--purple-dark);
+      }
     }
 
     .pill-count {
