@@ -17,7 +17,9 @@
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
   import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
   import IconPlusBold from "phosphor-icons-svelte/IconPlusBold.svelte";
-  import preventDefaultWhenBlurred from "$lib/preventDefaultWhenBlurred";
+  import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
+  import previouslyBlurred from "$lib/previouslyBlurred";
+  import HelpDialog from "$lib/HelpDialog.svelte";
 
   const plugins = await getPlugins();
 
@@ -52,6 +54,21 @@
   );
 
   let jsonLd = $derived(generateJsonLd(sortedPlugins));
+
+  let helpDialogOpen = $state(false);
+
+  function openHelpDialog(event: MouseEvent) {
+    const button = event.currentTarget as HTMLButtonElement;
+
+    if (
+      window.matchMedia("(pointer: coarse)").matches &&
+      button.dataset.previouslyBlurred === true.toString()
+    ) {
+      return;
+    }
+
+    helpDialogOpen = true;
+  }
 
   $effect.pre(() => {
     if (sortBy === "name") sortDirection = "asc";
@@ -190,12 +207,19 @@
 </footer>
 
 <div class="fab-container">
-  <a
+  <button
     class="fab"
+    onclick={openHelpDialog}
+    title="Help"
+    aria-haspopup="dialog"
+    {@attach previouslyBlurred}>
+    <IconQuestionFill />
+  </button>
+  <a
+    class="fab fab-small"
     href="https://github.com/gllms/helix-editor-plugins"
     target="_blank"
-    title="Go to helix-editor-plugins GitHub repository"
-    {@attach preventDefaultWhenBlurred}>
+    title="Go to helix-editor-plugins GitHub repository">
     <IconGithubLogoFill />
   </a>
   <a
@@ -206,6 +230,8 @@
     <IconPlusBold />
   </a>
 </div>
+
+<HelpDialog bind:open={helpDialogOpen} />
 
 <style>
   h1 button {
@@ -446,6 +472,7 @@
       border-radius: 40%;
       width: 3.5rem;
       height: 3.5rem;
+      padding: 0;
       display: grid;
       place-items: center;
       box-shadow: var(--shadow-sm);
@@ -466,6 +493,10 @@
           scale: 1.1;
         }
       }
+
+      &:not(.fab-small) {
+        font-size: 2rem;
+      }
     }
 
     .fab-small {
@@ -474,7 +505,11 @@
       z-index: -1;
 
       @media (prefers-reduced-motion: no-preference) {
-        translate: 0 calc(100% + var(--gap));
+        translate: 0 calc(var(--stack, 1) * 100% + var(--stack, 1) * var(--gap));
+      }
+
+      & + .fab-small {
+        --stack: 2;
       }
     }
 
