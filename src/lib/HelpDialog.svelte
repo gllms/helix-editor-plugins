@@ -66,7 +66,7 @@ cargo xtask steel</pre>
     margin-bottom: -3rem;
     overflow: visible;
     background: var(--purple-dark);
-    color: var(--purple-);
+    color: var(--purple-light);
     border: 2px solid var(--border-subtle);
     border-bottom: none;
     border-radius: var(--radius) var(--radius) 0 0;
