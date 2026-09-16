@@ -5,9 +5,9 @@
   --purple-light: #a4a0e8;
   --grey: #bcbcbc;
 
-  --surface-1: rgba(255, 255, 255, 0.1);
+  --surface-1: color-mix( var(--purple-dark), var(--purple-light) 15%);
   --surface-2: rgba(0, 0, 0, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-subtle: color-mix(var(--purple-light) 8%, transparent);
 
   --radius-xs: 0.5rem;
   --radius-sm: 0.75rem;
@@ -41,8 +41,7 @@ html {
 }
 
 ::selection {
-  background: var(--purple-light);
-  color: var(--purple-dark);
+  background: color-mix(var(--purple-light), transparent 75%);
 }
 
 ::-webkit-scrollbar {
@@ -68,6 +67,7 @@ body {
   margin-bottom: 5rem; /* Leave room for the FAB so it doesn't overlap the footer */
   min-height: 100vh;
   background: var(--purple-dark);
+  background: radial-gradient(ellipse 70rem 20rem at top, color-mix(var(--purple-dark), var(--purple-light) 15%) 0, var(--purple-dark));
   color: var(--purple-light);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -88,12 +88,6 @@ h1 {
   font-size: clamp(3rem, 2.0769rem + 2.5641vw, 4rem);
   font-weight: 800;
   text-align: center;
-
-  &, * {
-    text-shadow:
-      0 0 1.25rem rgba(255, 255, 255, 0.2),
-      0 0 4.5rem rgba(255, 255, 255, 0.3);
-  }
 }
 
 h2 {
@@ -139,7 +133,7 @@ input {
       filter var(--transition-base),
       box-shadow var(--transition-base);
 
-    &:hover, &:not(button):focus {
+    :not(h1) > &:hover, &:not(button):focus {
       filter: brightness(1.25);
       --scale: 1.05;
       box-shadow: var(--shadow-md);

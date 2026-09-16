@@ -455,8 +455,7 @@
       font-weight: 900;
 
       &::selection {
-        background: var(--purple-dark);
-        color: var(--purple-light);
+        background: color-mix(var(--purple-dark), transparent 50%);
       }
     }
   }

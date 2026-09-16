@@ -50,6 +50,7 @@ cargo xtask steel</pre>
 
 <style>
   .help-dialog {
+    --radius: var(--radius-lg);
     position: fixed;
     left: 50%;
     top: auto;
@@ -64,10 +65,10 @@ cargo xtask steel</pre>
     margin-bottom: -3rem;
     overflow: visible;
     background: var(--purple-dark);
-    color: var(--purple-light);
+    color: var(--purple-);
     border: 2px solid var(--border-subtle);
     border-bottom: none;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-radius: var(--radius) var(--radius) 0 0;
     box-shadow: var(--shadow-xl);
 
     @media (max-width: 576px) {
@@ -108,6 +109,7 @@ cargo xtask steel</pre>
     .dialog-content {
       max-height: min(85vh, calc(100vh - 2rem));
       overflow-y: auto;
+      margin-top: calc(var(--radius) / 2);
       padding: var(--gap-xl);
       padding-bottom: max(var(--gap-lg), env(safe-area-inset-bottom));
 
@@ -162,26 +164,31 @@ cargo xtask steel</pre>
       border-radius: 40%;
       padding: 0.75rem;
       font-size: 1.25rem;
+
+      @media (min-width: 1400px) {
+        bottom: auto;
+        translate: calc(100% + var(--gap-md));
+      }
     }
   }
 
   @media (prefers-reduced-motion: no-preference) {
     @keyframes dialog-squish-in {
       0% {
-        translate: -50% 100%;
-        scale: 0.7 1;
+        translate: -50% 30%;
+        scale: 0.96 1;
         opacity: 0;
       }
 
       55% {
-        translate: -50% -6%;
-        scale: 0.94 1.06;
+        translate: -50% -2%;
+        scale: 0.99 1.02;
         opacity: 1;
       }
 
       80% {
-        translate: -50% 2%;
-        scale: 1.03 0.97;
+        translate: -50% 1%;
+        scale: 1.01 0.99;
       }
 
       100% {
@@ -198,19 +205,19 @@ cargo xtask steel</pre>
       }
 
       25% {
-        translate: -50% 2%;
-        scale: 1.03 0.97;
+        translate: -50% 1%;
+        scale: 1.01 0.99;
       }
 
       50% {
-        translate: -50% -4%;
-        scale: 0.94 1.06;
+        translate: -50% -1%;
+        scale: 0.99 1.02;
         opacity: 1;
       }
 
       100% {
-        translate: -50% 100%;
-        scale: 0.7 1;
+        translate: -50% 25%;
+        scale: 0.96 1;
         opacity: 0;
       }
     }
