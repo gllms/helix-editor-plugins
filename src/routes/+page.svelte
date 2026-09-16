@@ -22,7 +22,6 @@
   import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
   import previouslyBlurred from "$lib/previouslyBlurred";
   import HelpDialog from "$lib/HelpDialog.svelte";
-  import { MediaQuery } from "svelte/reactivity";
 
   const plugins = await getPlugins();
 
@@ -43,8 +42,6 @@
       tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
     }
   }
-
-	const isSmallScreen = new MediaQuery('max-width: 576px');
 
   let sortedPlugins = $derived(
     filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection),
@@ -123,7 +120,7 @@
 
     {#if Object.keys(tagCounts).length > 0}
       <div class="tags-container">
-        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed && isSmallScreen.current ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
+        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
           <button
             class="pill"
             onclick={() => (searchQuery = "#" + tag)}
@@ -137,7 +134,7 @@
             </span>
           </button>
         {/each}
-        {#if Object.keys(tagCounts).length > COLLAPSED_TAG_COUNT && isSmallScreen.current}
+        {#if Object.keys(tagCounts).length > COLLAPSED_TAG_COUNT}
           <button
             class="pill pill-colored"
             onclick={() => (tagsCollapsed = !tagsCollapsed)}
