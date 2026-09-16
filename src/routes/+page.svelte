@@ -74,6 +74,11 @@
     helpDialogOpen = true;
   }
 
+  function searchForTag(tag: string) {
+    searchQuery = "#" + tag;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   $effect.pre(() => {
     if (sortBy === "name") sortDirection = "asc";
     else sortDirection = "desc";
@@ -123,7 +128,7 @@
         {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
           <button
             class="pill"
-            onclick={() => (searchQuery = "#" + tag)}
+            onclick={() => searchForTag(tag)}
             aria-label={`Search by tag: ${tag}`}>
             <IconHashBold />
             <span>
@@ -197,8 +202,7 @@
                       class="pill"
                       onclick={(e) => {
                         e.preventDefault();
-                        searchQuery = "#" + tag;
-                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        searchForTag(tag);
                       }}
                       aria-label={`Search by tag: ${tag}`}>
                       <IconHashBold />
