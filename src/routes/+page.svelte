@@ -48,13 +48,15 @@
   );
 
   const newPluginJson = encodeURIComponent(
-    `
-{
-  description: "A concise description of the plugin",
-  repository: "username/repo",
-  tags: ["tag1", "tag2"]
-}
-  `.trim(),
+    JSON.stringify(
+      {
+        description: "A concise description of the plugin",
+        repository: "username/repo",
+        tags: ["tag1", "tag2"],
+      },
+      null,
+      2,
+    ),
   );
 
   let jsonLd = $derived(generateJsonLd(sortedPlugins));
