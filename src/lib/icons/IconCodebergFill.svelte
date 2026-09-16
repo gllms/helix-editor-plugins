@@ -7,7 +7,7 @@
 
 <svg
   {...p}
-  data-phosphor-icon="bell-ringing"
+  data-phosphor-icon="codeberg"
   aria-hidden="true"
   width="1em"
   height="1em"
