@@ -1,16 +1,14 @@
 import type { Attachment } from "svelte/attachments";
 
-const previouslyBlurred: Attachment<HTMLElement> = (element) => {
-  const onPointerDown = (event: PointerEvent): void => {
-    const currentTarget = event.currentTarget as HTMLElement;
+const DATASET_KEY = "previouslyBlurred";
 
-    currentTarget.dataset.previouslyBlurred = (document.activeElement !== currentTarget).toString();
+const previouslyBlurred: Attachment<HTMLElement> = (element) => {
+  const onPointerDown = () => {
+    element.dataset[DATASET_KEY] = String(document.activeElement !== element);
   };
 
-  const onBlur = (event: FocusEvent): void => {
-    const currentTarget = event.currentTarget as HTMLElement;
-
-    delete currentTarget?.dataset.previouslyBlurred;
+  const onBlur = () => {
+    delete element.dataset[DATASET_KEY];
   };
 
   element.addEventListener("pointerdown", onPointerDown);
@@ -22,12 +20,8 @@ const previouslyBlurred: Attachment<HTMLElement> = (element) => {
   };
 };
 
-declare global {
-  interface HTMLElement {
-    dataset: {
-      previouslyBlurred?: string;
-    };
-  }
+export function wasPreviouslyBlurred(element: HTMLElement): boolean {
+  return element.dataset[DATASET_KEY] === "true";
 }
 
 export default previouslyBlurred;

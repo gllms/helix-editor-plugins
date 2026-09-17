@@ -20,7 +20,7 @@
   import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
   import IconPlusBold from "phosphor-icons-svelte/IconPlusBold.svelte";
   import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
-  import previouslyBlurred from "$lib/previouslyBlurred";
+  import previouslyBlurred, { wasPreviouslyBlurred } from "$lib/previouslyBlurred";
   import HelpDialog from "$lib/HelpDialog.svelte";
 
   const plugins = await getPlugins();
@@ -66,10 +66,8 @@
   function openHelpDialog(event: MouseEvent) {
     const button = event.currentTarget as HTMLButtonElement;
 
-    if (
-      window.matchMedia("(pointer: coarse)").matches &&
-      button.dataset.previouslyBlurred === true.toString()
-    ) {
+    // Allow revealing the other FAB buttons on first tap when the pointer is coarse
+    if (window.matchMedia("(pointer: coarse)").matches && wasPreviouslyBlurred(button)) {
       return;
     }
 
