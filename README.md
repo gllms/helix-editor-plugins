@@ -9,7 +9,7 @@ If you want to add or update a plugin, simply add or update the corresponding JS
 By default, a repository in the format `username/repo` is assumed to be on GitHub. If the plugin is hosted somewhere else, you can prefix the repository name with one of the following prefixes, for example `codeberg:username/repo`.
 
 | Prefix      | Host                              |
-|-------------|-----------------------------------|
+| ----------- | --------------------------------- |
 | `codeberg:` | [Codeberg](https://codeberg.org/) |
 
 If you want to make changes to the site itself, you can run the project locally. Make sure `API_TOKEN_GITHUB` and `API_TOKEN_CODEBERG` are set with a valid token. One way to do this is by creating a `.env` file in the root of the project. Then you can run the following commands to install dependencies and start the development server:

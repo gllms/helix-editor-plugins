@@ -15,16 +15,12 @@
     onTagClick?: (tag: string) => void;
   }
 
-  let {
-    plugin,
-    headingLevel = 2,
-    showCreatedAt = false,
-  }: IPluginCardProps = $props();
+  let { plugin, headingLevel = 2, showCreatedAt = false }: IPluginCardProps = $props();
 
   const source = $derived(getRepositorySource(plugin.repository));
 </script>
 
-<a class="plugin-card" href="{resolve(`/plugin/${plugin.name}`)}">
+<a class="plugin-card" href={resolve(`/plugin/${plugin.name}`)}>
   <svelte:element this={`h${headingLevel}`}>{plugin.name}</svelte:element>
   <p>{plugin.description}</p>
   <ul class="pill-container" role="list">

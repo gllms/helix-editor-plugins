@@ -5,7 +5,7 @@
   --purple-light: #a4a0e8;
   --grey: #bcbcbc;
 
-  --surface-1: color-mix( var(--purple-dark), var(--purple-light) 15%);
+  --surface-1: color-mix(var(--purple-dark), var(--purple-light) 15%);
   --surface-2: rgba(0, 0, 0, 0.2);
   --border-subtle: color-mix(var(--purple-light) 8%, transparent);
 
@@ -72,9 +72,19 @@ body {
   margin-bottom: 5rem; /* Leave room for the FAB so it doesn't overlap the footer */
   min-height: 100vh;
   background: var(--purple-dark);
-  background: radial-gradient(ellipse 70rem 20rem at top, color-mix(var(--purple-dark), var(--purple-light) 15%) 0, var(--purple-dark));
+  background: radial-gradient(
+    ellipse 70rem 20rem at top,
+    color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
+    var(--purple-dark)
+  );
   color: var(--purple-light);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 html:has(dialog[open]) {
@@ -140,7 +150,8 @@ a.pill,
       filter var(--transition-base),
       box-shadow var(--transition-base);
 
-    :not(h1) > &:hover, &:not(button):focus {
+    :not(h1) > &:hover,
+    &:not(button):focus {
       filter: brightness(1.25);
       --scale: 1.05;
       box-shadow: var(--shadow-md);
@@ -244,7 +255,7 @@ a.pill,
   .pill-count {
     --size: 1.25em;
     min-width: var(--size);
-    padding-inline: .125em;
+    padding-inline: 0.125em;
     background: var(--purple-light);
     border-radius: 0.3rem;
     color: var(--purple-dark);

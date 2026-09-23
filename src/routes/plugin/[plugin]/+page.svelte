@@ -7,10 +7,7 @@
   import PluginCard from "$lib/PluginCard.svelte";
   import { generatePluginJsonLd } from "$lib/generateJsonLd";
   import { toSearchHash } from "$lib/searchHash";
-  import {
-    getRepositoryPath,
-    getRepositorySource,
-  } from "$lib/repositorySources";
+  import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
 
   import IconHouseBold from "phosphor-icons-svelte/IconHouseBold.svelte";
   import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
@@ -23,20 +20,25 @@
 
   const plugins = await getPlugins();
 
-  const plugin = $derived(
-    plugins.find((plugin) => plugin.name === params.plugin),
-  );
-  const similarPlugins = $derived(
-    plugin ? getSimilarPlugins(plugin, plugins) : [],
-  );
+  const plugin = $derived(plugins.find((plugin) => plugin.name === params.plugin));
+  const similarPlugins = $derived(plugin ? getSimilarPlugins(plugin, plugins) : []);
 
   let pluginsByAuthor = $derived(
-    plugin && plugins.filter((p) => p.repository.split('/').shift() === plugin.repository.split('/').shift() && p.name !== plugin.name)
+    plugin &&
+      plugins.filter(
+        (p) =>
+          p.repository.split("/").shift() === plugin.repository.split("/").shift() &&
+          p.name !== plugin.name,
+      ),
   );
 </script>
 
 <svelte:head>
-  <title>{plugin ? `${plugin.name} - Helix Editor Plugins` : "Plugin not found - Helix Editor Plugins"}</title>
+  <title
+    >{plugin
+      ? `${plugin.name} - Helix Editor Plugins`
+      : "Plugin not found - Helix Editor Plugins"}</title
+  >
   <meta name="description" content={plugin ? plugin.description : "Plugin not found."} />
   <link rel="canonical" href={`https://helix-editor-plugins.com/plugin/${params.plugin}`} />
   {#if plugin}
@@ -63,7 +65,8 @@
             class="pill"
             href={plugin.url}
             target="_blank"
-            title="Go to the {plugin.name} repository">
+            title="Go to the {plugin.name} repository"
+          >
             <source.icon />
             <span class="visually-hidden">{source.name} repository:</span>
             {getRepositoryPath(plugin.repository)}
@@ -76,16 +79,12 @@
               <span class="visually-hidden">Stars:</span>
               {plugin.star_count}
             </li>
-            <li
-              class="pill"
-              title="Created: {plugin.created_at.toLocaleString()}">
+            <li class="pill" title="Created: {plugin.created_at.toLocaleString()}">
               <IconAsteriskBold />
               <span class="visually-hidden">Created:</span>
               <time datetime={plugin.created_at.toISOString()}>{timeAgo(plugin.created_at)}</time>
             </li>
-            <li
-              class="pill"
-              title="Last push: {plugin.updated_at.toLocaleString()}">
+            <li class="pill" title="Last push: {plugin.updated_at.toLocaleString()}">
               <IconGitCommitFill />
               <span class="visually-hidden">Last push:</span>
               <time datetime={plugin.updated_at.toISOString()}>{timeAgo(plugin.updated_at)}</time>
@@ -95,7 +94,7 @@
             <ul class="pill-container" role="list">
               {#each plugin.tags.toSorted() as tag (tag)}
                 <li>
-                  <a href="{resolve("/")}{toSearchHash("#" + tag)}" class="pill">
+                  <a href="{resolve('/')}{toSearchHash('#' + tag)}" class="pill">
                     <IconHashBold />
                     <span class="visually-hidden">Search by tag:</span>
                     {tag}
@@ -133,7 +132,7 @@
         </ul>
       {/if}
       {#if pluginsByAuthor?.length}
-        <h2>More by {plugin.repository.split('/').shift()}</h2>
+        <h2>More by {plugin.repository.split("/").shift()}</h2>
         <ul class="plugin-grid" role="list">
           {#each pluginsByAuthor as related (related.name)}
             <li>
@@ -153,10 +152,16 @@
     --card-center: 50%;
 
     @media (min-width: 60rem) {
-      --card-center: calc(max(0px, 50% - var(--max-width-page) / 2) + var(--padding-page) + var(--card-width) / 2);
+      --card-center: calc(
+        max(0px, 50% - var(--max-width-page) / 2) + var(--padding-page) + var(--card-width) / 2
+      );
     }
 
-    background: radial-gradient(ellipse var(--card-width) 30rem at top 0 left var(--card-center), color-mix(var(--purple-dark), var(--purple-light) 15%) 0, var(--purple-dark));
+    background: radial-gradient(
+      ellipse var(--card-width) 30rem at top 0 left var(--card-center),
+      color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
+      var(--purple-dark)
+    );
   }
 
   .home-button {
@@ -170,7 +175,6 @@
     background: var(--surface-2);
     color: var(--grey);
   }
-
 
   .layout {
     display: grid;

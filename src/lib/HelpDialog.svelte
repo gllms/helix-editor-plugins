@@ -17,35 +17,72 @@
   onclose={() => (open = false)}
   onclick={(event) => {
     if (event.target === dialog) dialog.close();
-  }}>
+  }}
+>
   <button class="dialog-close" onclick={() => dialog.close()} aria-label="Close">
     <IconXBold />
   </button>
 
   <div class="dialog-content">
     <h2>Using Steel plugins in Helix</h2>
-    <p>As of this writing the <a href="https://github.com/helix-editor/helix/pull/8675" target="_blank">Steel plugin branch</a> by Matthew Paras isn't merged into <code>master</code> yet. In order to use these plugins, you'll need to compile Helix from this branch yourself. The instructions below are adapted from <a href="https://github.com/mattwparas/helix/blob/steel-event-system/STEEL.md" target="_blank">STEEL.md</a> and the <a href="https://github.com/mattwparas/vim.hx" target="_blank">vim.hx README.md</a>.</p>
+    <p>
+      As of this writing the
+      <a href="https://github.com/helix-editor/helix/pull/8675" target="_blank">
+        Steel plugin branch
+      </a>
+      by Matthew Paras isn't merged into <code>master</code> yet. In order to use these plugins,
+      you'll need to compile Helix from this branch yourself. The instructions below are adapted
+      from
+      <a
+        href="https://github.com/mattwparas/helix/blob/steel-event-system/STEEL.md"
+        target="_blank"
+      >
+        STEEL.md
+      </a>
+      and the <a href="https://github.com/mattwparas/vim.hx" target="_blank">vim.hx README.md</a>.
+    </p>
 
     <h3>1. Compile Helix from the <code>steel-event-system</code> branch</h3>
     <pre>git clone https://github.com/mattwparas/helix.git
 cd helix
 git checkout steel-event-system
 cargo xtask steel</pre>
-    <p>This builds and installs Helix with Steel support, as well as the <code>steel</code> executable, the Steel LSP, and Steel's package manager <code>forge</code>.</p>
+    <p>
+      This builds and installs Helix with Steel support, as well as the <code>steel</code>
+      executable, the Steel LSP, and Steel's package manager <code>forge</code>.
+    </p>
 
     <h3>2. Install a plugin</h3>
-    <p>First, install a plugin with <code>forge</code>. For example, to install <code>vim.hx</code>:</p>
+    <p>
+      First, install a plugin with <code>forge</code>. For example, to install <code>vim.hx</code>:
+    </p>
     <pre>forge pkg install --git https://github.com/mattwparas/vim.hx.git</pre>
 
     <h3>3. Require the plugin in <code>init.scm</code></h3>
-    <p>In order to load the plugin, you have to require the plugin from a special Steel file in the Helix runtime directory called <code>init.scm</code>. The installation process should have created it for you. The Helix runtime directory is usually <code>~/.config/helix/</code> on Linux and <code>%APPDATA%\helix\</code> on Windows, but you can check <code>hx --health</code> if unsure.</p>
-    <p>When you've found or created the <code>init.scm</code> file, add the following line somewhere at the top of the file to require the plugin, replacing the <code>vim-hx/init.scm</code> with the path to your plugin. Check the plugin's documentation for the correct path.</p>
+    <p>
+      In order to load the plugin, you have to require the plugin from a special Steel file in the
+      Helix runtime directory called <code>init.scm</code>. The installation process should have
+      created it for you. The Helix runtime directory is usually <code>~/.config/helix/</code> on
+      Linux and <code>%APPDATA%\helix\</code> on Windows, but you can check <code>hx --health</code> if
+      unsure.
+    </p>
+    <p>
+      When you've found or created the <code>init.scm</code> file, add the following line somewhere
+      at the top of the file to require the plugin, replacing the <code>vim-hx/init.scm</code> with the
+      path to your plugin. Check the plugin's documentation for the correct path.
+    </p>
     <pre>(require "vim-hx/init.scm")</pre>
-    <p>Depending on the plugin, you'll need to configure it after requiring. This too can hopefully be found in the plugin's documentation. For example, in <code>vim.hx</code>'s case, you need to add the following line to your <code>init.scm</code>:</p>
+    <p>
+      Depending on the plugin, you'll need to configure it after requiring. This too can hopefully
+      be found in the plugin's documentation. For example, in <code>vim.hx</code>'s case, you need
+      to add the following line to your <code>init.scm</code>:
+    </p>
     <pre>(set-vim-keybindings!)</pre>
-    
+
     <h3>4. Reload the configuration</h3>
-    <p>Finally, run <code>:config-reload</code> if Helix is already running to reload the configuration.</p>
+    <p>
+      Finally, run <code>:config-reload</code> if Helix is already running to reload the configuration.
+    </p>
   </div>
 </dialog>
 

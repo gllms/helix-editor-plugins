@@ -12,16 +12,19 @@ interface ICodebergRepository {
 export const enrichPluginCodeberg: PluginEnricher = async (plugin) => {
   const headers = {
     Accept: "application/json",
-    Authorization: `token ${API_TOKEN_CODEBERG}`
+    Authorization: `token ${API_TOKEN_CODEBERG}`,
   };
 
-  const response = await fetch(`https://codeberg.org/api/v1/repos/${getRepositoryPath(plugin.repository)}`, { headers });
+  const response = await fetch(
+    `https://codeberg.org/api/v1/repos/${getRepositoryPath(plugin.repository)}`,
+    { headers },
+  );
 
   if (!response.ok) {
     throw new Error(`Codeberg API returned ${response.status} for ${plugin.repository}`);
   }
 
-  const payload = await response.json() as ICodebergRepository;
+  const payload = (await response.json()) as ICodebergRepository;
   return {
     ...plugin,
     star_count: typeof payload.stars_count === "number" ? payload.stars_count : 0,

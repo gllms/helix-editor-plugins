@@ -1,0 +1,35 @@
+name: Check formatting
+
+on:
+  push:
+    branches: "main"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        id: format
+        run: npm run format:check
+
+      - name: Show the changes Prettier expects
+        if: failure() && steps.format.outcome == 'failure'
+        run: |
+          npm run format > /dev/null
+          git diff --color=always

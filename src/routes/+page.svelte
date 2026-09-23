@@ -38,10 +38,7 @@
     }
   }
 
-  let sortedPlugins = $derived(
-    filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection),
-  );
-
+  let sortedPlugins = $derived(filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection));
 
   let jsonLd = $derived(generateJsonLd(sortedPlugins));
 
@@ -74,10 +71,7 @@
 </svelte:head>
 
 <h1>
-  <button
-    onclick={() => (searchQuery = "")}
-    title="Clear search"
-    aria-label="Clear search">
+  <button onclick={() => (searchQuery = "")} title="Clear search" aria-label="Clear search">
     Helix Editor Plugins
   </button>
 </h1>
@@ -97,7 +91,8 @@
         <button
           onclick={() => (sortDirection = sortDirection === "asc" ? "desc" : "asc")}
           style:--rotate={sortDirection === "asc" ? "360deg" : ""}
-          aria-label={`Toggle sort direction (currently ${sortDirection === "asc" ? "ascending" : "descending"})`}>
+          aria-label={`Toggle sort direction (currently ${sortDirection === "asc" ? "ascending" : "descending"})`}
+        >
           {#if sortDirection === "asc"}
             <IconSortAscendingBold />
           {:else}
@@ -109,11 +104,11 @@
 
     {#if Object.keys(tagCounts).length > 0}
       <ul class="pill-container" role="list">
-        {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
+        {#each Object.entries(tagCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
           <li>
-            <button
-              class="pill"
-              onclick={() => searchForTag(tag)}>
+            <button class="pill" onclick={() => searchForTag(tag)}>
               <IconHashBold />
               <span class="visually-hidden">Search by tag:</span>
               <span>
@@ -131,7 +126,8 @@
             <button
               class="pill pill-colored"
               onclick={() => (tagsCollapsed = !tagsCollapsed)}
-              aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}>
+              aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}
+            >
               {#if tagsCollapsed}
                 <IconDotsThreeBold />
               {:else}
@@ -159,7 +155,8 @@
           <li
             in:motionTransition={{ fn: scale, start: 0.9 }}
             out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
-            animate:motionAnimation={{ fn: flip, duration: 400 }}>
+            animate:motionAnimation={{ fn: flip, duration: 400 }}
+          >
             <PluginCard {plugin} showCreatedAt onTagClick={searchForTag} />
           </li>
         {/each}

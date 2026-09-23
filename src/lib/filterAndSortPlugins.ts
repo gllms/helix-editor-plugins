@@ -23,15 +23,16 @@ function getMagicScore(plugin: IPlugin): number {
   return starScore * (1 + RECENCY_WEIGHT * recencyFactor);
 }
 
-export default function filterAndSortPlugins(plugins: IPlugin[], searchQuery: string, sortBy: keyof IPlugin | "magic", sortDirection: "asc" | "desc") {
+export default function filterAndSortPlugins(
+  plugins: IPlugin[],
+  searchQuery: string,
+  sortBy: keyof IPlugin | "magic",
+  sortDirection: "asc" | "desc",
+) {
   let result = plugins;
 
   if (searchQuery.trim() !== "") {
-    const words = searchQuery
-      .trim()
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(Boolean);
+    const words = searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
 
     const tagWords = words.filter((word) => word.startsWith("#"));
     const normalWords = words.filter((word) => !word.startsWith("#"));

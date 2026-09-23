@@ -17,12 +17,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm i
-        
+
       - name: Build site
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -30,7 +30,7 @@ jobs:
           BASE_PATH: "/${{ github.event.repository.name }}"
         run: |
           npm run build
-          
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -38,7 +38,7 @@ jobs:
           path: |
             build/
 
-      - name: Upload Pages Artifacts 
+      - name: Upload Pages Artifacts
         uses: actions/upload-pages-artifact@v5
         with:
           path: "build/"

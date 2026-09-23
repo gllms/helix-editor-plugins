@@ -12,7 +12,9 @@ async function fetchLatinWoff2Url(weight) {
     return res.text();
   });
 
-  const latinBlock = css.split("/* ").find((block) => block.startsWith("latin */") && !block.startsWith("latin-ext"));
+  const latinBlock = css
+    .split("/* ")
+    .find((block) => block.startsWith("latin */") && !block.startsWith("latin-ext"));
   const [, url] = latinBlock?.match(/url\((https:\/\/[^)]+\.woff2)\)/) ?? [];
   if (!url) throw new Error(`Could not find a latin woff2 URL for SN Pro weight ${weight}`);
 
@@ -37,7 +39,9 @@ async function downloadLicense() {
   const destPath = path.join(staticDir, "OFL.txt");
   if (existsSync(destPath)) return;
 
-  const text = await fetch("https://raw.githubusercontent.com/google/fonts/main/ofl/snpro/OFL.txt").then((res) => {
+  const text = await fetch(
+    "https://raw.githubusercontent.com/google/fonts/main/ofl/snpro/OFL.txt",
+  ).then((res) => {
     if (!res.ok) throw new Error(`Failed to download OFL.txt: ${res.status} ${res.statusText}`);
     return res.text();
   });

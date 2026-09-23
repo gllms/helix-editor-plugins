@@ -15,7 +15,9 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "fonts:fetch": "node scripts/fetch-fonts.mjs",
     "generate:og-image": "node scripts/og-image/generate.mjs",
-    "generate:favicon-ico": "node scripts/favicon/generate.mjs"
+    "generate:favicon-ico": "node scripts/favicon/generate.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
@@ -23,6 +25,8 @@
     "@sveltejs/kit": "^2.63.0",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@types/node": "^26.1.1",
+    "prettier": "^3.9.9",
+    "prettier-plugin-svelte": "^4.1.1",
     "svelte": "^5.56.1",
     "svelte-check": "^4.6.0",
     "typescript": "^6.0.3",

@@ -41,9 +41,8 @@
 
 <footer>
   <p>
-    This site is not affiliated with the Helix editor. Plugins are
-    community-contributed and not vetted by this site. Use them at your own
-    risk.
+    This site is not affiliated with the Helix editor. Plugins are community-contributed and not
+    vetted by this site. Use them at your own risk.
   </p>
 </footer>
 
@@ -53,21 +52,24 @@
     onclick={openHelpDialog}
     title="Help"
     aria-haspopup="dialog"
-    {@attach previouslyBlurred}>
+    {@attach previouslyBlurred}
+  >
     <IconQuestionFill />
   </button>
   <a
     class="fab fab-small"
     href="https://github.com/gllms/helix-editor-plugins"
     target="_blank"
-    title="Go to helix-editor-plugins GitHub repository">
+    title="Go to helix-editor-plugins GitHub repository"
+  >
     <IconGithubLogoFill />
   </a>
   <a
     class="fab fab-small"
     href="https://github.com/gllms/helix-editor-plugins/new/main/plugins?filename=plugin-name.json&value={newPluginJson}"
     target="_blank"
-    title="Add new plugin to GitHub repository">
+    title="Add new plugin to GitHub repository"
+  >
     <IconPlusBold />
   </a>
 </div>

@@ -31,10 +31,7 @@ async function fetchFontTtf(weight) {
   return Buffer.from(await fetch(url).then((res) => res.arrayBuffer()));
 }
 
-const [snProExtraBold, snProRegular] = await Promise.all([
-  fetchFontTtf(800),
-  fetchFontTtf(400),
-]);
+const [snProExtraBold, snProRegular] = await Promise.all([fetchFontTtf(800), fetchFontTtf(400)]);
 
 // @resvg/resvg-js's `fontBuffers` option doesn't reliably resolve custom
 // family names, so the fetched fonts are written to disk and loaded via

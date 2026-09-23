@@ -63,7 +63,7 @@
 @font-face {
   font-family: "SN Pro Fallback 700";
   src: local("Arial");
-  size-adjust: 128.00%;
+  size-adjust: 128%;
   ascent-override: 76.95%;
   descent-override: 24.61%;
   line-gap-override: 0%;
@@ -74,7 +74,7 @@
   src: local("Arial");
   size-adjust: 130.72%;
   ascent-override: 75.35%;
-  descent-override: 24.10%;
+  descent-override: 24.1%;
   line-gap-override: 0%;
 }
 

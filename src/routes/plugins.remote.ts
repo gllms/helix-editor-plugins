@@ -38,11 +38,15 @@ export const getPlugins = prerender<IPlugin[]>(async () => {
     import: "default",
   });
   const plugins: IPlugin[] = Object.entries(pluginJsonFiles).map(([path, content]) => {
-    const name = path.split("/").pop()?.replace(/\.json$/, "") ?? "";
+    const name =
+      path
+        .split("/")
+        .pop()
+        ?.replace(/\.json$/, "") ?? "";
     return { name, ...JSON.parse(content) };
   });
 
   return await Promise.all(
-    plugins.map((plugin) => enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin))
+    plugins.map((plugin) => enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin)),
   );
 });

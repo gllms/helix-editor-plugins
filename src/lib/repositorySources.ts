@@ -43,13 +43,18 @@ export const repositorySources: IRepositorySource[] = [
 const defaultSource: IRepositorySource = (() => {
   const source = repositorySources.find((source) => !source.prefix);
   if (!source) {
-    throw new Error("repositorySources must include exactly one source without a prefix to act as the default.");
+    throw new Error(
+      "repositorySources must include exactly one source without a prefix to act as the default.",
+    );
   }
   return source;
 })();
 
 export function getRepositorySource(repository: string): IRepositorySource {
-  return repositorySources.find((source) => source.prefix && repository.startsWith(source.prefix)) ?? defaultSource;
+  return (
+    repositorySources.find((source) => source.prefix && repository.startsWith(source.prefix)) ??
+    defaultSource
+  );
 }
 
 /** Strips the source prefix (if any) from a plugin's `repository` field. */

@@ -6,7 +6,11 @@ const MIN_SHARED_TAGS = 2;
 const RARE_TAG_MAX_FRACTION = 0.08;
 
 /** Get related plugins based on shared tags. Rarer tags are worth more than more common tags. */
-export default function getRelatedPlugins(plugin: IPlugin, plugins: IPlugin[], count: number = RELATED_COUNT): IPlugin[] {
+export default function getRelatedPlugins(
+  plugin: IPlugin,
+  plugins: IPlugin[],
+  count: number = RELATED_COUNT,
+): IPlugin[] {
   const tags = new Set(plugin.tags ?? []);
   const tagCounts = new Map<string, number>();
   const rareTagMaxPlugins = plugins.length * RARE_TAG_MAX_FRACTION;
@@ -29,7 +33,9 @@ export default function getRelatedPlugins(plugin: IPlugin, plugins: IPlugin[], c
         score: sharedTags.reduce((score, tag) => score + 1 / tagCounts.get(tag)!, 0),
       };
     })
-    .filter(({ sharedTagCount, sharesRareTag }) => sharedTagCount >= MIN_SHARED_TAGS || sharesRareTag)
+    .filter(
+      ({ sharedTagCount, sharesRareTag }) => sharedTagCount >= MIN_SHARED_TAGS || sharesRareTag,
+    )
     .sort((a, b) => b.score - a.score || b.plugin.star_count - a.plugin.star_count)
     .slice(0, count)
     .map(({ plugin }) => plugin);

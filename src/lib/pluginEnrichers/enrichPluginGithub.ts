@@ -11,17 +11,20 @@ export interface IGitHubRepository {
 
 const headers = {
   Accept: "application/vnd.github+json",
-  Authorization: `Bearer ${API_TOKEN_GITHUB}`
+  Authorization: `Bearer ${API_TOKEN_GITHUB}`,
 };
 
 export const enrichPluginGithub: PluginEnricher = async (plugin) => {
-  const response = await fetch(`https://api.github.com/repos/${getRepositoryPath(plugin.repository)}`, { headers });
+  const response = await fetch(
+    `https://api.github.com/repos/${getRepositoryPath(plugin.repository)}`,
+    { headers },
+  );
 
   if (!response.ok) {
     throw new Error(`GitHub API returned ${response.status} for ${plugin.repository}`);
   }
 
-  const payload = await response.json() as IGitHubRepository;
+  const payload = (await response.json()) as IGitHubRepository;
   return {
     ...plugin,
     star_count: typeof payload.stargazers_count === "number" ? payload.stargazers_count : 0,

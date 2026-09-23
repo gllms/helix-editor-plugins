@@ -6,9 +6,7 @@ export default function createSearchText(plugin: IPlugin) {
 
   if (plugin.tags) {
     tagsAndSynonyms = plugin.tags.flatMap((tag) => {
-      const synonyms = (tagSynonyms as string[][]).find((arr) =>
-        arr.includes(tag),
-      );
+      const synonyms = (tagSynonyms as string[][]).find((arr) => arr.includes(tag));
 
       return synonyms ?? [tag];
     });

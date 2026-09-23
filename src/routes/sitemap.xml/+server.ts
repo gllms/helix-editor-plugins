@@ -14,7 +14,9 @@ export const GET: RequestHandler = async () => {
   const plugins = await getPlugins();
 
   // The home page lists every plugin, so it's as fresh as the most recently updated one
-  const [mostRecentlyUpdated] = plugins.toSorted((a, b) => b.updated_at.getTime() - a.updated_at.getTime());
+  const [mostRecentlyUpdated] = plugins.toSorted(
+    (a, b) => b.updated_at.getTime() - a.updated_at.getTime(),
+  );
 
   const entries = [
     { loc: `${SITE_URL}/`, lastmod: mostRecentlyUpdated?.updated_at },
