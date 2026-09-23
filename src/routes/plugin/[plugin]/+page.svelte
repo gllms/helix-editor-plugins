@@ -87,10 +87,10 @@
           {#if plugin.tags?.length}
             <div class="pill-container">
               {#each plugin.tags.toSorted() as tag (tag)}
-                <span class="pill">
+                <a href="/#{encodeURIComponent("#" + tag)}" class="pill">
                   <IconHashBold />
                   {tag}
-                </span>
+                </a>
               {/each}
             </div>
           {/if}

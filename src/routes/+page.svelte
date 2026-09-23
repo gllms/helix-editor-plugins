@@ -1,5 +1,8 @@
 <script lang="ts">
   import { getPlugins, type IPlugin } from "./plugins.remote";
+  import { onMount } from "svelte";
+  import { replaceState } from "$app/navigation";
+  import { page } from "$app/state";
   import { flip } from "svelte/animate";
   import { scale } from "svelte/transition";
   import { motionAnimation, motionTransition } from "$lib/motion";
@@ -45,6 +48,16 @@
     searchQuery = "#" + tag;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  onMount(() => {
+    if (location.hash) searchQuery = decodeURIComponent(location.hash.slice(1));
+  });
+
+  $effect(() => {
+    const hash = searchQuery ? "#" + encodeURIComponent(searchQuery) : "";
+    if (location.hash === hash) return;
+    replaceState(location.pathname + location.search + hash, page.state);
+  });
 
   $effect.pre(() => {
     if (sortBy === "name") sortDirection = "asc";
