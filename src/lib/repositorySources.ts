@@ -11,6 +11,7 @@ export type RepositorySourceId = "codeberg" | "github";
 
 export interface IRepositorySource {
   id: RepositorySourceId;
+  name: string;
   /**
    * Prefix used in a plugin's `repository` field (e.g. `"codeberg:"`). Omitted for the
    * default source, which is assumed when no other source's prefix matches.
@@ -28,6 +29,7 @@ export interface IRepositorySource {
 export const repositorySources: IRepositorySource[] = [
   {
     id: "codeberg",
+    name: "Codeberg",
     prefix: "codeberg:",
     icon: IconCodebergFill,
     // Codeberg is much smaller than GitHub, so its stars are worth more per star.
@@ -35,7 +37,7 @@ export const repositorySources: IRepositorySource[] = [
     // Codeberg plugins to compare against.
     starMultiplier: 1.5,
   },
-  { id: "github", icon: IconGithubLogoFill, starMultiplier: 1 },
+  { id: "github", name: "GitHub", icon: IconGithubLogoFill, starMultiplier: 1 },
 ];
 
 const defaultSource: IRepositorySource = (() => {

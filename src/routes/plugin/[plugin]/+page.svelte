@@ -65,36 +65,44 @@
             target="_blank"
             title="Go to the {plugin.name} repository">
             <source.icon />
+            <span class="visually-hidden">{source.name} repository:</span>
             {getRepositoryPath(plugin.repository)}
             <IconArrowSquareOutBold />
+            <span class="visually-hidden">(opens in a new tab)</span>
           </a>
-          <div class="pill-container">
-            <span class="pill">
+          <ul class="pill-container" role="list">
+            <li class="pill">
               <IconStarFill />
+              <span class="visually-hidden">Stars:</span>
               {plugin.star_count}
-            </span>
-            <span
+            </li>
+            <li
               class="pill"
               title="Created: {plugin.created_at.toLocaleString()}">
               <IconAsteriskBold />
-              {timeAgo(plugin.created_at)}
-            </span>
-            <span
+              <span class="visually-hidden">Created:</span>
+              <time datetime={plugin.created_at.toISOString()}>{timeAgo(plugin.created_at)}</time>
+            </li>
+            <li
               class="pill"
               title="Last push: {plugin.updated_at.toLocaleString()}">
               <IconGitCommitFill />
-              {timeAgo(plugin.updated_at)}
-            </span>
-          </div>
+              <span class="visually-hidden">Last push:</span>
+              <time datetime={plugin.updated_at.toISOString()}>{timeAgo(plugin.updated_at)}</time>
+            </li>
+          </ul>
           {#if plugin.tags?.length}
-            <div class="pill-container">
+            <ul class="pill-container" role="list">
               {#each plugin.tags.toSorted() as tag (tag)}
-                <a href="{resolve("/")}{toSearchHash("#" + tag)}" class="pill">
-                  <IconHashBold />
-                  {tag}
-                </a>
+                <li>
+                  <a href="{resolve("/")}{toSearchHash("#" + tag)}" class="pill">
+                    <IconHashBold />
+                    <span class="visually-hidden">Search by tag:</span>
+                    {tag}
+                  </a>
+                </li>
               {/each}
-            </div>
+            </ul>
           {/if}
         </div>
       </article>
@@ -103,7 +111,7 @@
     <section class="related">
       {#if plugin.related?.length}
         <h2>Related plugins</h2>
-        <ul class="plugin-grid">
+        <ul class="plugin-grid" role="list">
           {#each plugin.related as related (related)}
             {const relatedPlugin = plugins.find((p) => p.name === related)}
             {#if relatedPlugin}
@@ -116,7 +124,7 @@
       {/if}
       {#if similarPlugins.length}
         <h2>Related plugins</h2>
-        <ul class="plugin-grid">
+        <ul class="plugin-grid" role="list">
           {#each similarPlugins as related (related.name)}
             <li>
               <PluginCard plugin={related} headingLevel={3} />
@@ -126,7 +134,7 @@
       {/if}
       {#if pluginsByAuthor?.length}
         <h2>More by {plugin.repository.split('/').shift()}</h2>
-        <ul class="plugin-grid">
+        <ul class="plugin-grid" role="list">
           {#each pluginsByAuthor as related (related.name)}
             <li>
               <PluginCard plugin={related} headingLevel={3} />

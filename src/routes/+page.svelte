@@ -108,34 +108,39 @@
     </div>
 
     {#if Object.keys(tagCounts).length > 0}
-      <div class="tags-container">
+      <ul class="pill-container" role="list">
         {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
-          <button
-            class="pill"
-            onclick={() => searchForTag(tag)}
-            aria-label={`Search by tag: ${tag}`}>
-            <IconHashBold />
-            <span>
-              {tag}
-            </span>
-            <span class="pill-count">
-              {count}
-            </span>
-          </button>
+          <li>
+            <button
+              class="pill"
+              onclick={() => searchForTag(tag)}>
+              <IconHashBold />
+              <span class="visually-hidden">Search by tag:</span>
+              <span>
+                {tag}
+              </span>
+              <span class="pill-count">
+                {count}
+              </span>
+              <span class="visually-hidden">{count === 1 ? "plugin" : "plugins"}</span>
+            </button>
+          </li>
         {/each}
         {#if Object.keys(tagCounts).length > COLLAPSED_TAG_COUNT}
-          <button
-            class="pill pill-colored"
-            onclick={() => (tagsCollapsed = !tagsCollapsed)}
-            aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}>
-            {#if tagsCollapsed}
-              <IconDotsThreeBold />
-            {:else}
-              <IconCaretLeftBold />
-            {/if}
-          </button>
+          <li>
+            <button
+              class="pill pill-colored"
+              onclick={() => (tagsCollapsed = !tagsCollapsed)}
+              aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}>
+              {#if tagsCollapsed}
+                <IconDotsThreeBold />
+              {:else}
+                <IconCaretLeftBold />
+              {/if}
+            </button>
+          </li>
         {/if}
-      </div>
+      </ul>
     {/if}
   </aside>
 
@@ -149,7 +154,7 @@
         {/if}
       </p>
     {:else}
-      <ul class="plugin-grid">
+      <ul class="plugin-grid" role="list">
         {#each sortedPlugins as plugin (plugin.name)}
           <li
             in:motionTransition={{ fn: scale, start: 0.9 }}
@@ -263,13 +268,6 @@
         flex: 1;
       }
     }
-  }
-
-  .tags-container {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--gap-sm);
   }
 
   .content {

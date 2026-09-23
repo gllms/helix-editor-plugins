@@ -27,24 +27,28 @@
 <a class="plugin-card" href="{resolve(`/plugin/${plugin.name}`)}">
   <svelte:element this={`h${headingLevel}`}>{plugin.name}</svelte:element>
   <p>{plugin.description}</p>
-  <div class="pill-container">
-    <span class="pill">
+  <ul class="pill-container" role="list">
+    <li class="pill">
       <source.icon />
+      <span class="visually-hidden">{source.name} repository:</span>
       {getRepositoryPath(plugin.repository)}
-    </span>
-    <span class="pill">
+    </li>
+    <li class="pill">
       <IconStarFill />
+      <span class="visually-hidden">Stars:</span>
       {plugin.star_count}
-    </span>
+    </li>
     {#if showCreatedAt}
-      <span class="pill" title="Created: {plugin.created_at.toLocaleString()}">
+      <li class="pill" title="Created: {plugin.created_at.toLocaleString()}">
         <IconAsteriskBold />
-        {timeAgo(plugin.created_at)}
-      </span>
+        <span class="visually-hidden">Created:</span>
+        <time datetime={plugin.created_at.toISOString()}>{timeAgo(plugin.created_at)}</time>
+      </li>
     {/if}
-    <span class="pill" title="Last push: {plugin.updated_at.toLocaleString()}">
+    <li class="pill" title="Last push: {plugin.updated_at.toLocaleString()}">
       <IconGitCommitFill />
-      {timeAgo(plugin.updated_at)}
-    </span>
-  </div>
+      <span class="visually-hidden">Last push:</span>
+      <time datetime={plugin.updated_at.toISOString()}>{timeAgo(plugin.updated_at)}</time>
+    </li>
+  </ul>
 </a>
