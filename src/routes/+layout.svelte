@@ -8,15 +8,12 @@
   import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
 
   const newPluginJson = encodeURIComponent(
-    JSON.stringify(
-      {
-        description: "A concise description of the plugin",
-        repository: "username/repo",
-        tags: ["tag1", "tag2"],
-      },
-      null,
-      2,
-    ) + "\n",
+    `{
+  "description": "A concise description of the plugin",
+  "repository": "username/repo",
+  "tags": ["tag1", "tag2"]
+}
+`,
   );
 
   let helpDialogOpen = $state(false);
