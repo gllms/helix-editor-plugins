@@ -1,7 +1,7 @@
 import type { IPlugin } from "../routes/plugins.remote";
 import { getRepositoryPath } from "./repositorySources";
 
-const SITE_URL = "https://helix-editor-plugins.com";
+export const SITE_URL = "https://helix-editor-plugins.com";
 
 export function getPluginPageUrl(plugin: IPlugin) {
   return `${SITE_URL}/plugin/${encodeURIComponent(plugin.name)}`;
