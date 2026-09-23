@@ -13,6 +13,7 @@ export interface IPlugin {
   updated_at: Date;
   url: string;
   search_text: string;
+  related?: string[];
 }
 
 export type PluginEnricher = (plugin: IPlugin) => Promise<IPlugin>;

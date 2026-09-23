@@ -1,27 +1,18 @@
 <script lang="ts">
   import { getPlugins, type IPlugin } from "./plugins.remote";
-  import timeAgo from "$lib/timeAgo";
   import { flip } from "svelte/animate";
   import { scale } from "svelte/transition";
   import { motionAnimation, motionTransition } from "$lib/motion";
   import createSearchText from "$lib/createSearchText";
   import filterAndSortPlugins from "$lib/filterAndSortPlugins";
   import generateJsonLd from "$lib/generateJsonLd";
-  import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
 
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
   import IconDotsThreeBold from "phosphor-icons-svelte/IconDotsThreeBold.svelte";
   import IconCaretLeftBold from "phosphor-icons-svelte/IconCaretLeftBold.svelte";
-  import IconGithubLogoFill from "phosphor-icons-svelte/IconGithubLogoFill.svelte";
-  import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
-  import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
-  import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
-  import IconPlusBold from "phosphor-icons-svelte/IconPlusBold.svelte";
-  import IconQuestionFill from "phosphor-icons-svelte/IconQuestionFill.svelte";
-  import previouslyBlurred, { wasPreviouslyBlurred } from "$lib/previouslyBlurred";
-  import HelpDialog from "$lib/HelpDialog.svelte";
+  import PluginCard from "$lib/PluginCard.svelte";
 
   const plugins = await getPlugins();
 
@@ -47,32 +38,8 @@
     filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection),
   );
 
-  const newPluginJson = encodeURIComponent(
-    JSON.stringify(
-      {
-        description: "A concise description of the plugin",
-        repository: "username/repo",
-        tags: ["tag1", "tag2"],
-      },
-      null,
-      2,
-    ),
-  );
 
   let jsonLd = $derived(generateJsonLd(sortedPlugins));
-
-  let helpDialogOpen = $state(false);
-
-  function openHelpDialog(event: MouseEvent) {
-    const button = event.currentTarget as HTMLButtonElement;
-
-    // Allow revealing the other FAB buttons on first tap when the pointer is coarse
-    if (window.matchMedia("(pointer: coarse)").matches && wasPreviouslyBlurred(button)) {
-      return;
-    }
-
-    helpDialogOpen = true;
-  }
 
   function searchForTag(tag: string) {
     searchQuery = "#" + tag;
@@ -86,6 +53,9 @@
 </script>
 
 <svelte:head>
+  <title>Helix Editor Plugins</title>
+  <meta name="description" content="Browse Helix Steel plugins in a user friendly way." />
+  <link rel="canonical" href="https://helix-editor-plugins.com/" />
   {@html `<script type="application/ld+json">${jsonLd}</script>`}
 </svelte:head>
 
@@ -165,93 +135,19 @@
         {/if}
       </p>
     {:else}
-      <ul>
+      <ul class="plugin-grid">
         {#each sortedPlugins as plugin (plugin.name)}
-          {@const source = getRepositorySource(plugin.repository)}
           <li
             in:motionTransition={{ fn: scale, start: 0.9 }}
             out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
             animate:motionAnimation={{ fn: flip, duration: 400 }}>
-            <a href={plugin.url} target="_blank">
-              <h2>{plugin.name}</h2>
-              <p>{plugin.description}</p>
-              <div class="pill-container">
-                <span class="pill">
-                  <source.icon />
-                  {getRepositoryPath(plugin.repository)}
-                </span>
-                <span class="pill">
-                  <IconStarFill />
-                  {plugin.star_count}
-                </span>
-                <span
-                  class="pill"
-                  title="Created: {plugin.created_at.toLocaleString()}">
-                  <IconAsteriskBold />
-                  {timeAgo(plugin.created_at)}
-                </span>
-                <span
-                  class="pill"
-                  title="Last push: {plugin.updated_at.toLocaleString()}">
-                  <IconGitCommitFill />
-                  {timeAgo(plugin.updated_at)}
-                </span>
-                {#if plugin.tags?.length}
-                  {#each plugin.tags.toSorted() as tag (tag)}
-                    <button
-                      class="pill"
-                      onclick={(e) => {
-                        e.preventDefault();
-                        searchForTag(tag);
-                      }}
-                      aria-label={`Search by tag: ${tag}`}>
-                      <IconHashBold />
-                      {tag}
-                    </button>
-                  {/each}
-                {/if}
-              </div>
-            </a>
+            <PluginCard {plugin} showCreatedAt onTagClick={searchForTag} />
           </li>
         {/each}
       </ul>
     {/if}
   </div>
 </div>
-
-<footer>
-  <p>
-    This site is not affiliated with the Helix editor. Plugins are
-    community-contributed and not vetted by this site. Use them at your own risk.
-  </p>
-</footer>
-
-<div class="fab-container">
-  <button
-    class="fab"
-    onclick={openHelpDialog}
-    title="Help"
-    aria-haspopup="dialog"
-    {@attach previouslyBlurred}>
-    <IconQuestionFill />
-  </button>
-  <a
-    class="fab fab-small"
-    href="https://github.com/gllms/helix-editor-plugins"
-    target="_blank"
-    title="Go to helix-editor-plugins GitHub repository">
-    <IconGithubLogoFill />
-  </a>
-  <a
-    class="fab fab-small"
-    href="https://github.com/gllms/helix-editor-plugins/new/main/plugins?filename=plugin-name.json&value={newPluginJson}"
-    target="_blank"
-    title="Add new plugin to GitHub repository">
-    <IconPlusBold />
-  </a>
-</div>
-
-<HelpDialog bind:open={helpDialogOpen} />
 
 <style>
   h1 button {
@@ -369,183 +265,5 @@
   .empty-state {
     text-align: center;
     padding: var(--gap-lg) 0;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 1fr));
-    gap: var(--gap-md);
-
-    li {
-      > a {
-        display: flex;
-        flex-direction: column;
-        background: var(--surface-2);
-        border: 2px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: var(--gap-lg) 1.75rem;
-        box-shadow: var(--shadow-md);
-        height: 100%;
-        transform: translateY(0) scale(1);
-
-        @media (prefers-reduced-motion: no-preference) {
-          transition:
-            transform var(--transition-base) ease-out,
-            box-shadow var(--transition-base) ease-out;
-        }
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        > a:hover {
-          transform: translateY(-0.25rem) scale(1.01);
-          box-shadow: var(--shadow-lg);
-        }
-      }
-
-      > a > p {
-        flex: 1; /* Make sure the tags in the cards are at the bottom of the card */
-      }
-    }
-  }
-
-  .pill-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap-sm);
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--gap-xs);
-    background: var(--surface-1);
-    border-radius: var(--radius-sm);
-    padding: var(--gap-xs) var(--gap-sm);
-    color: var(--grey);
-    border: none;
-    font-size: inherit;
-    /* font-family: inherit; */
-    font-family: var(--font-display-500);
-    font-weight: 500;
-    height: 1lh;
-    box-sizing: content-box;
-
-    :global(svg) {
-      color: var(--purple-light);
-    }
-
-    &.pill-colored {
-      background: var(--purple-light);
-      color: var(--purple-dark);
-
-      :global(svg) {
-        color: var(--purple-dark);
-      }
-    }
-
-    .pill-count {
-      --size: 1.25em;
-      min-width: var(--size);
-      padding-inline: .125em;
-      background: var(--purple-light);
-      border-radius: 0.3rem;
-      color: var(--purple-dark);
-      font-size: 0.75em;
-      font-family: var(--font-display-900);
-      font-weight: 900;
-
-      &::selection {
-        background: color-mix(var(--purple-dark), transparent 50%);
-      }
-    }
-  }
-
-  footer {
-    margin-top: var(--gap-lg);
-    padding-top: var(--gap-lg);
-    border-top: 2px solid var(--border-subtle);
-    text-align: center;
-
-    p {
-      margin: 0 0 var(--gap-xs);
-      font-size: 0.875rem;
-      opacity: 0.7;
-    }
-  }
-
-  .fab-container {
-    --gap: var(--gap-md);
-    --transition-delay: var(--transition-base);
-
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    gap: var(--gap);
-    pointer-events: none;
-
-    &:hover,
-    &:focus-within {
-      --transition-delay: 0s;
-    }
-
-    .fab {
-      background: var(--purple-light);
-      color: white;
-      border: none;
-      border-radius: 40%;
-      width: 3.5rem;
-      height: 3.5rem;
-      padding: 0;
-      display: grid;
-      place-items: center;
-      box-shadow: var(--shadow-sm);
-      font-size: 1.5rem;
-      pointer-events: auto;
-      translate: 0 0;
-      scale: 1;
-
-      @media (prefers-reduced-motion: no-preference) {
-        transition:
-          box-shadow var(--transition-fast) var(--transition-delay) ease-out,
-          translate var(--transition-fast) var(--transition-delay) ease-out,
-          scale var(--transition-fast) ease-out;
-
-        &:hover,
-        &:focus {
-          box-shadow: var(--shadow-xl);
-          scale: 1.1;
-        }
-      }
-
-      &:not(.fab-small) {
-        font-size: 2rem;
-      }
-    }
-
-    .fab-small {
-      width: 2.5rem;
-      height: 2.5rem;
-      z-index: -1;
-
-      @media (prefers-reduced-motion: no-preference) {
-        translate: 0 calc(var(--stack, 1) * 100% + var(--stack, 1) * var(--gap));
-      }
-
-      & + .fab-small {
-        --stack: 2;
-      }
-    }
-
-    &:hover .fab-small,
-    &:focus-within .fab-small {
-      translate: 0 0;
-    }
   }
 </style>

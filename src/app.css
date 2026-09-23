@@ -28,6 +28,11 @@
   --transition-base: 0.3s;
   --transition-fast: 0.2s;
 
+  --padding-page: 2rem;
+  --max-width-page: max(100rem, 50vw);
+
+  --card-width: 28rem;
+
   color-scheme: dark;
 }
 
@@ -77,8 +82,8 @@ html:has(dialog[open]) {
 }
 
 main {
-  padding: 2rem;
-  max-width: max(100rem, 50vw);
+  padding: var(--padding-page);
+  max-width: var(--max-width-page);
   margin: 0 auto;
 }
 
@@ -93,7 +98,7 @@ h1 {
 h2 {
   margin: 0 0 0.5rem;
   font-family: var(--font-display-700);
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
 }
 
@@ -137,6 +142,109 @@ input {
       filter: brightness(1.25);
       --scale: 1.05;
       box-shadow: var(--shadow-md);
+    }
+  }
+}
+
+.plugin-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(25rem, 100%), 1fr));
+  gap: var(--gap-md);
+
+  > li {
+    display: flex; /* Stretch the card to the full height of its cell */
+  }
+}
+
+.plugin-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-lg) 1.75rem;
+  box-shadow: var(--shadow-md);
+  transform: translateY(0) scale(1);
+
+  > :is(h1, h2, h3) {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display-700);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  > p {
+    flex: 1; /* Make sure the pills in the cards are at the bottom of the card */
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a.plugin-card {
+    transition:
+      transform var(--transition-base) ease-out,
+      box-shadow var(--transition-base) ease-out;
+
+    &:hover {
+      transform: translateY(-0.25rem) scale(1.01);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+}
+
+.pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: start;
+  gap: var(--gap-xs);
+  background: var(--surface-1);
+  border-radius: var(--radius-sm);
+  padding: var(--gap-xs) var(--gap-sm);
+  color: var(--grey);
+  border: none;
+  font-size: inherit;
+  font-family: var(--font-display-500);
+  font-weight: 500;
+  height: 1lh;
+  width: fit-content;
+  box-sizing: content-box;
+
+  svg {
+    color: var(--purple-light);
+  }
+
+  &.pill-colored {
+    background: var(--purple-light);
+    color: var(--purple-dark);
+
+    svg {
+      color: var(--purple-dark);
+    }
+  }
+
+  .pill-count {
+    --size: 1.25em;
+    min-width: var(--size);
+    padding-inline: .125em;
+    background: var(--purple-light);
+    border-radius: 0.3rem;
+    color: var(--purple-dark);
+    font-size: 0.75em;
+    font-family: var(--font-display-900);
+    font-weight: 900;
+
+    &::selection {
+      background: color-mix(var(--purple-dark), transparent 50%);
     }
   }
 }
