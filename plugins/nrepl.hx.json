@@ -1,5 +1,5 @@
 {
   "description": "An nREPL client plugin for the Helix editor",
   "repository": "waddie/nrepl.hx",
-  "tags": ["editing", "integration", "language-support"]
+  "tags": ["editing", "integration", "language-support", "lisp", "repl"]
 }

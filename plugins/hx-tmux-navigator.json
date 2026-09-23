@@ -1,5 +1,5 @@
 {
   "description": "Seamlessly navigate between tmux panes and helix splits",
   "repository": "piotrkwarcinski/hx-tmux-navigator",
-  "tags": ["integration", "keys", "navigation", "terminal", "workflow"]
+  "tags": ["integration", "keys", "navigation", "splits", "terminal", "workflow"]
 }

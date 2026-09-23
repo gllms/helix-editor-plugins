@@ -1,5 +1,5 @@
 {
   "description": "A plugin that sends WakaTime heartbeats",
   "repository": "Xerxes-2/wakatime.hx",
-  "tags": ["integration", "stats", "workflow"]
+  "tags": ["activity", "integration", "stats", "workflow"]
 }

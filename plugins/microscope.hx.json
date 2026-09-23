@@ -1,5 +1,5 @@
 {
   "description": "Customizable pickers for Helix, inspired by telescope.nvim",
   "repository": "chuwy/microscope.hx",
-  "tags": ["files", "navigation", "search", "ui", "utility"]
+  "tags": ["cog", "files", "navigation", "picker", "search", "ui", "utility"]
 }

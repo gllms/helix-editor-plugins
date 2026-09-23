@@ -1,5 +1,5 @@
 {
   "description": "Recent project picker. Jump to a recent project and browse its files side by side",
   "repository": "Ra77a3l3-jar/trail.hx",
-  "tags": ["files", "navigation", "ui", "workflow"]
+  "tags": ["files", "icons", "navigation", "picker", "projects", "ui", "workflow"]
 }

@@ -1,5 +1,5 @@
 {
   "description": "A git/jj interface for the Helix editor",
   "repository": "waddie/juju",
-  "tags": ["integration", "ui", "version-control", "workflow"]
+  "tags": ["blame", "integration", "ui", "version-control", "workflow"]
 }

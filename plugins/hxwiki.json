@@ -1,5 +1,5 @@
 {
   "description": "A VimWiki-inspired wiki plugin for the Helix editor — follow/create [[links]] and keep a daily diary without leaving the editor",
   "repository": "sipmann/hxwiki",
-  "tags": ["notes"]
+  "tags": ["notes", "writing"]
 }

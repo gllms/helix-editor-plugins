@@ -1,5 +1,5 @@
 {
   "description": "Shared tree-sitter helper functions for Helix Steel plugins",
   "repository": "waddie/ts-utils.hx",
-  "tags": ["utility"]
+  "tags": ["cog", "tree-sitter", "utility"]
 }

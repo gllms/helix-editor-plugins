@@ -1,5 +1,5 @@
 {
   "description": "Additional motions for Helix",
   "repository": "waddie/emotional.hx",
-  "tags": ["keys", "navigation"]
+  "tags": ["keys", "motions", "navigation", "selections"]
 }

@@ -1,5 +1,5 @@
 {
   "description": "A fully configurable statusline and bufferline for Helix",
   "repository": "Ra77a3l3-jar/moka.hx",
-  "tags": ["ui"]
+  "tags": ["icons", "statusline", "ui"]
 }

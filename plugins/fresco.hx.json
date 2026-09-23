@@ -1,0 +1,5 @@
+{
+  "description": "Automatically reload unmodified buffers when files or Git history change outside Helix",
+  "repository": "ivoronin/fresco.hx",
+  "tags": ["auto-reload", "files", "utility", "version-control", "workflow"]
+}

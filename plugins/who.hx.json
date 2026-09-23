@@ -1,0 +1,5 @@
+{
+  "description": "Inline git blame for the current line",
+  "repository": "Ra77a3l3-jar/who.hx",
+  "tags": ["blame", "ui", "version-control"]
+}

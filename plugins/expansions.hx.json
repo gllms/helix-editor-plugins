@@ -1,0 +1,5 @@
+{
+  "description": "Resolve Helix command line expansions like %{file_path_absolute} from Steel plugins",
+  "repository": "waddie/expansions.hx",
+  "tags": ["cog", "utility"]
+}

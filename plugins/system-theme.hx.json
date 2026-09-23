@@ -1,5 +1,5 @@
 {
   "description": "Theme switcher plugin for Helix that automatically adapts to your system's appearance (dark/light mode)",
   "repository": "j03-dev/system-theme.hx",
-  "tags": ["ui"]
+  "tags": ["integration", "ui"]
 }

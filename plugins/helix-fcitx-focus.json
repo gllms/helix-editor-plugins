@@ -1,0 +1,5 @@
+{
+  "description": "Keep fcitx5 in English outside insert mode and restore your input method when you return to it",
+  "repository": "mtul0729/helix-fcitx-focus",
+  "tags": ["insert-mode", "integration", "keys", "workflow"]
+}

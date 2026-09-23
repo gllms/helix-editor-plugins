@@ -1,0 +1,5 @@
+{
+  "description": "Shared buffer and formatting functions for REPL-style Helix Steel plugins",
+  "repository": "waddie/repl-ui.hx",
+  "tags": ["cog", "repl", "utility"]
+}

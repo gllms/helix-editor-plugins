@@ -1,5 +1,5 @@
 {
   "description": "Zen mode for Helix: centre the buffer and zoom the focused split",
   "repository": "waddie/matte.hx",
-  "tags": ["ui", "workflow"]
+  "tags": ["splits", "ui", "workflow", "writing", "zen-mode"]
 }

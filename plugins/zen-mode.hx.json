@@ -1,0 +1,5 @@
+{
+  "description": "Distraction-free mode that centers the active window, inspired by zen-mode.nvim",
+  "repository": "notnmeyer/zen-mode.hx",
+  "tags": ["ui", "workflow", "writing", "zen-mode"]
+}

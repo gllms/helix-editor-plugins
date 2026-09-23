@@ -1,5 +1,5 @@
 {
   "description": "Unified register history for yanks, searches, and typed commands",
   "repository": "waddie/previously.hx",
-  "tags": ["editing", "search", "ui"]
+  "tags": ["editing", "picker", "search", "ui", "yank"]
 }

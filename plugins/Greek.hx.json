@@ -1,5 +1,5 @@
 {
   "description": "Greek mode for Helix",
   "repository": "a3s7p/Greek.hx",
-  "tags": ["editing", "keys"]
+  "tags": ["editing", "insert-mode", "keys"]
 }
