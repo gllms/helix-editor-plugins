@@ -125,7 +125,9 @@ select {
 
 button,
 select,
-input {
+input,
+a.pill,
+.home-button {
   --scale: 1;
   --rotate: 0deg;
 
