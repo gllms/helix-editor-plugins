@@ -16,7 +16,7 @@
       },
       null,
       2,
-    ),
+    ) + "\n",
   );
 
   let helpDialogOpen = $state(false);
