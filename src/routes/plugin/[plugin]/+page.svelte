@@ -48,6 +48,7 @@
 
 {#if plugin}
   {const source = getRepositorySource(plugin.repository)}
+  {const repositoryPath = getRepositoryPath(plugin.repository)}
 
   <a href={resolve("/")} class="home-button" title="Go to home page" aria-label="Go to home page">
     <IconHouseBold />
@@ -69,7 +70,7 @@
           >
             <source.icon />
             <span class="visually-hidden">{source.name} repository:</span>
-            {getRepositoryPath(plugin.repository)}
+            {repositoryPath}
             <IconArrowSquareOutBold />
             <span class="visually-hidden">(opens in a new tab)</span>
           </a>
@@ -132,7 +133,7 @@
         </ul>
       {/if}
       {#if pluginsByAuthor?.length}
-        <h2>More by {plugin.repository.split("/").shift()}</h2>
+        <h2>More by {repositoryPath.split("/").shift()}</h2>
         <ul class="plugin-grid" role="list">
           {#each pluginsByAuthor as related (related.name)}
             <li>
