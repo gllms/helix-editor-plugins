@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getPlugins } from "../../plugins.remote";
   import type { PageProps } from "./$types";
+  import { resolve } from "$app/paths";
   import timeAgo from "$lib/timeAgo";
   import getSimilarPlugins from "$lib/getSimilarPlugins";
   import PluginCard from "$lib/PluginCard.svelte";
@@ -45,7 +46,7 @@
 {#if plugin}
   {const source = getRepositorySource(plugin.repository)}
 
-  <a href="/" class="home-button" title="Go to home page" aria-label="Go to home page">
+  <a href={resolve("/")} class="home-button" title="Go to home page" aria-label="Go to home page">
     <IconHouseBold />
   </a>
 
@@ -87,7 +88,7 @@
           {#if plugin.tags?.length}
             <div class="pill-container">
               {#each plugin.tags.toSorted() as tag (tag)}
-                <a href="/#{encodeURIComponent("#" + tag)}" class="pill">
+                <a href="{resolve("/")}#{encodeURIComponent("#" + tag)}" class="pill">
                   <IconHashBold />
                   {tag}
                 </a>
