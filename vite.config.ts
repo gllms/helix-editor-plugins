@@ -23,9 +23,9 @@ export default defineConfig({
       },
       inlineStyleThreshold: Infinity,
       prerender: {
-        handleMissingId: ({ path, message }) => {
-          // The home page's hash holds a search query (e.g. tag links to /#%23tag), not an element id
-          if (path === `${base ?? ""}/`) return;
+        handleMissingId: ({ path, id, message }) => {
+          // Hash links to the home page like /#q=%23tag hold a search query (see src/lib/searchHash.ts), not an element id
+          if (path === `${base ?? ""}/` && id.startsWith("q=")) return;
           throw new Error(message);
         },
       },

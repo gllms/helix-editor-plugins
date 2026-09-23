@@ -6,6 +6,7 @@
   import getSimilarPlugins from "$lib/getSimilarPlugins";
   import PluginCard from "$lib/PluginCard.svelte";
   import { generatePluginJsonLd } from "$lib/generateJsonLd";
+  import { toSearchHash } from "$lib/searchHash";
   import {
     getRepositoryPath,
     getRepositorySource,
@@ -88,7 +89,7 @@
           {#if plugin.tags?.length}
             <div class="pill-container">
               {#each plugin.tags.toSorted() as tag (tag)}
-                <a href="{resolve("/")}#{encodeURIComponent("#" + tag)}" class="pill">
+                <a href="{resolve("/")}{toSearchHash("#" + tag)}" class="pill">
                   <IconHashBold />
                   {tag}
                 </a>

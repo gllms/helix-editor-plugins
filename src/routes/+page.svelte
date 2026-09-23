@@ -9,6 +9,7 @@
   import createSearchText from "$lib/createSearchText";
   import filterAndSortPlugins from "$lib/filterAndSortPlugins";
   import generateJsonLd from "$lib/generateJsonLd";
+  import { fromSearchHash, toSearchHash } from "$lib/searchHash";
 
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
@@ -50,11 +51,11 @@
   }
 
   onMount(() => {
-    if (location.hash) searchQuery = decodeURIComponent(location.hash.slice(1));
+    searchQuery = fromSearchHash(location.hash);
   });
 
   $effect(() => {
-    const hash = searchQuery ? "#" + encodeURIComponent(searchQuery) : "";
+    const hash = toSearchHash(searchQuery);
     if (location.hash === hash) return;
     replaceState(location.pathname + location.search + hash, page.state);
   });
