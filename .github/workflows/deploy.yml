@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: "main"
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
 
 jobs:
   build_site:
@@ -27,8 +30,8 @@ jobs:
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
           API_TOKEN_CODEBERG: ${{ secrets.API_TOKEN_CODEBERG }}
-          BASE_PATH: "/${{ github.event.repository.name }}"
         run: |
+          export BASE_PATH="/${GITHUB_REPOSITORY#*/}"
           npm run build
 
       - name: Upload Artifacts
