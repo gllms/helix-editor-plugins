@@ -1,5 +1,5 @@
 {
   "description": "Smooth scrolling Helix plugin",
   "repository": "thomasschafer/smooth-scroll.hx",
-  "tags": ["animation", "ui"]
+  "tags": ["animation", "rice", "ui"]
 }

@@ -22,6 +22,7 @@
   ["presentation", "screenshots", "screencast", "demo", "sharing", "streaming"],
   ["projects", "workspace", "workspaces", "working-directory"],
   ["repl", "eval", "interactive", "nrepl", "scratch"],
+  ["rice", "ricing", "eye-candy", "aesthetics", "cosmetic", "pretty"],
   ["search", "find", "lookup", "query", "grep"],
   ["selections", "selection", "selecting", "multiple-selections", "multi-cursor"],
   ["splits", "panes", "window-management"],
