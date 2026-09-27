@@ -60,8 +60,8 @@
 </svelte:head>
 
 {#if plugin}
-  {const source = getRepositorySource(plugin.repository)}
-  {const repositoryPath = getRepositoryPath(plugin.repository)}
+  {const source = $derived(getRepositorySource(plugin.repository))}
+  {const repositoryPath = $derived(getRepositoryPath(plugin.repository))}
 
   <HomeButton />
 
