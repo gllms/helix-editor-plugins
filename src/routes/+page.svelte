@@ -1,6 +1,8 @@
 <script lang="ts">
   import { getPlugins, type IPlugin } from "./plugins.remote";
   import { onMount } from "svelte";
+  import { on } from "svelte/events";
+  import { MediaQuery } from "svelte/reactivity";
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
   import { flip } from "svelte/animate";
@@ -14,8 +16,7 @@
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
-  import IconDotsThreeBold from "phosphor-icons-svelte/IconDotsThreeBold.svelte";
-  import IconCaretLeftBold from "phosphor-icons-svelte/IconCaretLeftBold.svelte";
+  import Collapsible from "$lib/Collapsible.svelte";
   import PluginCard from "$lib/PluginCard.svelte";
 
   const plugins = await getPlugins();
@@ -27,8 +28,9 @@
   let searchQuery = $state<string>("");
   let sortBy = $state<keyof IPlugin | "magic">("magic");
   let sortDirection = $state<"asc" | "desc">("desc");
-  let tagsCollapsed = $state<boolean>(true);
-  const COLLAPSED_TAG_COUNT = 10;
+  let tagsCollapsible = $state<ReturnType<typeof Collapsible>>();
+
+  const sidebarLayout = new MediaQuery("min-width: 60rem");
 
   const tagCounts: Record<string, number> = {};
 
@@ -44,7 +46,23 @@
 
   function searchForTag(tag: string) {
     searchQuery = "#" + tag;
+    if (!sidebarLayout.current) tagsCollapsible?.collapse();
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function trackViewportTop(filters: HTMLElement) {
+    if (!sidebarLayout.current) return;
+
+    const update = () =>
+      filters.style.setProperty("--viewport-top", `${filters.getBoundingClientRect().top}px`);
+    update();
+    document.fonts.ready.then(update);
+    const offScroll = on(window, "scroll", update, { passive: true });
+    const offResize = on(window, "resize", update);
+    return () => {
+      offScroll();
+      offResize();
+    };
   }
 
   onMount(() => {
@@ -77,7 +95,7 @@
 </h1>
 
 <div class="layout">
-  <aside class="filters">
+  <aside class="filters" {@attach trackViewportTop}>
     <div class="search-container">
       <input type="search" placeholder="Search..." bind:value={searchQuery} />
       <div class="sort-controls">
@@ -103,40 +121,32 @@
     </div>
 
     {#if Object.keys(tagCounts).length > 0}
-      <ul class="pill-container" role="list">
-        {#each Object.entries(tagCounts)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, tagsCollapsed ? COLLAPSED_TAG_COUNT : undefined) as [tag, count]}
-          <li>
-            <button class="pill" onclick={() => searchForTag(tag)}>
-              <IconHashBold />
-              <span class="visually-hidden">Search by tag:</span>
-              <span>
-                {tag}
-              </span>
-              <span class="pill-count">
-                {count}
-              </span>
-              <span class="visually-hidden">{count === 1 ? "plugin" : "plugins"}</span>
-            </button>
-          </li>
-        {/each}
-        {#if Object.keys(tagCounts).length > COLLAPSED_TAG_COUNT}
-          <li>
-            <button
-              class="pill pill-colored"
-              onclick={() => (tagsCollapsed = !tagsCollapsed)}
-              aria-label={tagsCollapsed ? "Show all tags" : "Collapse tags"}
-            >
-              {#if tagsCollapsed}
-                <IconDotsThreeBold />
-              {:else}
-                <IconCaretLeftBold />
-              {/if}
-            </button>
-          </li>
-        {/if}
-      </ul>
+      <div class="tags">
+        <Collapsible
+          label="tags"
+          collapsedHeight="8.75rem"
+          fadeHeight="3rem"
+          bind:this={tagsCollapsible}
+        >
+          <ul class="pill-container" role="list">
+            {#each Object.entries(tagCounts).sort((a, b) => b[1] - a[1]) as [tag, count]}
+              <li>
+                <button class="pill" onclick={() => searchForTag(tag)}>
+                  <IconHashBold />
+                  <span class="visually-hidden">Search by tag:</span>
+                  <span>
+                    {tag}
+                  </span>
+                  <span class="pill-count">
+                    {count}
+                  </span>
+                  <span class="visually-hidden">{count === 1 ? "plugin" : "plugins"}</span>
+                </button>
+              </li>
+            {/each}
+          </ul>
+        </Collapsible>
+      </div>
     {/if}
   </aside>
 
@@ -183,7 +193,7 @@
     align-items: start;
 
     @media (min-width: 60rem) {
-      grid-template-columns: 18rem 1fr;
+      grid-template-columns: 21rem 1fr;
     }
   }
 
@@ -195,6 +205,26 @@
     @media (min-width: 60rem) {
       position: sticky;
       top: var(--gap-lg);
+      /* Not above the sticky top, or it would grow when the end of the page pushes it up */
+      max-height: calc(100vh - max(var(--gap-lg), var(--viewport-top, var(--gap-lg))));
+    }
+  }
+
+  .tags {
+    @media (min-width: 60rem) {
+      overflow: hidden auto;
+      scrollbar-width: thin;
+      scrollbar-gutter: stable;
+      /* Room for focus rings and shadows, which the scroll container would clip */
+      margin: calc(-1 * var(--gap-xs)) calc(-1 * var(--gap-xs)) 0 calc(-1 * var(--gap-xl));
+      padding: var(--gap-xs) var(--gap-xs) var(--gap-xs) var(--gap-xl);
+
+      /* Room below the collapse button. Not padding, since sticky offsets are within that. */
+      &::after {
+        content: "";
+        display: block;
+        height: 2.5rem;
+      }
     }
   }
 

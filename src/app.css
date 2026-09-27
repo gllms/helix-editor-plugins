@@ -240,15 +240,6 @@ a.pill,
     color: var(--purple-light);
   }
 
-  &.pill-colored {
-    background: var(--purple-light);
-    color: var(--purple-dark);
-
-    svg {
-      color: var(--purple-dark);
-    }
-  }
-
   .pill-count {
     --size: 1.25em;
     min-width: var(--size);

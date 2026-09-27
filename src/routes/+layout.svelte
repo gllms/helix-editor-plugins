@@ -89,8 +89,8 @@
     --transition-delay: var(--transition-base);
 
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
+    bottom: var(--gap-lg);
+    right: var(--gap-lg);
     display: flex;
     flex-direction: column-reverse;
     align-items: center;

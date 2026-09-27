@@ -1,115 +1,22 @@
 <script lang="ts">
-  import { flushSync } from "svelte";
   import type { IReadme } from "$lib/loadReadme";
-  import { prefersReducedMotion } from "$lib/motion";
+  import Collapsible from "$lib/Collapsible.svelte";
 
   import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
-  import IconArrowsOutSimpleBold from "phosphor-icons-svelte/IconArrowsOutSimpleBold.svelte";
-  import IconArrowsInSimpleBold from "phosphor-icons-svelte/IconArrowsInSimpleBold.svelte";
 
   let { readme, repositoryPath }: { readme: IReadme; repositoryPath: string } = $props();
-
-  const collapsibleId = $props.id();
-
-  // Collapses again when navigating to another plugin
-  let expanded = $derived.by(() => {
-    void readme.url;
-    return false;
-  });
-
-  // Assumed until measured, so the page is prerendered collapsed and doesn't shift when it loads
-  let overflowing = $state(true);
-
-  function measureOverflow(collapsible: HTMLDivElement) {
-    const observer = new ResizeObserver(() => {
-      // Only measurable while collapsed
-      if (!expanded) overflowing = collapsible.scrollHeight > collapsible.clientHeight;
-    });
-    observer.observe(collapsible);
-    observer.observe(collapsible.firstElementChild!);
-    return () => observer.disconnect();
-  }
-
-  let collapsible: HTMLDivElement;
-  let animating = $state(false);
-  let animation: Animation | undefined;
-
-  function toggle(event: MouseEvent) {
-    const button = event.currentTarget as HTMLButtonElement;
-    // Measured before cancelling, so toggling halfway continues from the current height
-    const fromHeight = collapsible.getBoundingClientRect().height;
-    animation?.cancel();
-
-    // Measured without .animating, which lifts the max-height
-    flushSync(() => {
-      expanded = !expanded;
-      animating = false;
-    });
-    const toHeight = collapsible.getBoundingClientRect().height;
-
-    if (!expanded) {
-      const { top, bottom } = button.getBoundingClientRect();
-      if (top < 0 || bottom > window.innerHeight) button.scrollIntoView({ block: "end" });
-    }
-
-    if (prefersReducedMotion.current || fromHeight === toHeight) return;
-
-    // Animated in JS, since max-height can't be transitioned to none
-    flushSync(() => (animating = true));
-    const fadeHeights = ["6rem", "0px"];
-    if (!expanded) fadeHeights.reverse();
-    animation = collapsible.animate(
-      [
-        { height: `${fromHeight}px`, "--fade-height": fadeHeights[0] },
-        { height: `${toHeight}px`, "--fade-height": fadeHeights[1] },
-      ],
-      { duration: 300, easing: "ease-out" },
-    );
-    animation.finished.then(
-      () => (animating = false),
-      () => {},
-    );
-  }
 </script>
 
 <section class="readme" aria-label="README">
-  <div class="readme-body">
-    <div
-      id={collapsibleId}
-      class="readme-collapsible"
-      class:collapsed={!expanded}
-      class:overflowing
-      class:animating
-      bind:this={collapsible}
-      {@attach measureOverflow}
-      onfocusin={() => {
-        if (overflowing) expanded = true;
-      }}
-    >
+  <!-- Keyed so it collapses again when navigating to another plugin -->
+  {#key readme.url}
+    <Collapsible label="README">
       <div class="readme-content">
         <!-- Sanitized at build time, see src/lib/renderReadme.ts -->
         {@html readme.html}
       </div>
-    </div>
-
-    {#if expanded || overflowing}
-      <button
-        class="readme-toggle"
-        class:over-fade={!expanded}
-        onclick={toggle}
-        aria-expanded={expanded}
-        aria-controls={collapsibleId}
-        aria-label={expanded ? "Collapse README" : "Expand README"}
-        title={expanded ? "Collapse README" : "Expand README"}
-      >
-        {#if expanded}
-          <IconArrowsInSimpleBold />
-        {:else}
-          <IconArrowsOutSimpleBold />
-        {/if}
-      </button>
-    {/if}
-  </div>
+    </Collapsible>
+  {/key}
 
   <p class="attribution">
     <a href={readme.url} target="_blank">
@@ -137,85 +44,6 @@
 
     @media (max-width: 576px) {
       padding: var(--gap-md);
-    }
-  }
-
-  .readme-body {
-    position: relative;
-  }
-
-  /* Registered so it can be animated. Its initial value can't be in rem, so it's set below. */
-  @property --fade-height {
-    syntax: "<length>";
-    inherits: false;
-    initial-value: 0px;
-  }
-
-  .readme-collapsible {
-    --collapsed-height: 10rem;
-    --fade-height: 6rem;
-    /* Otherwise visually hidden text (which is absolutely positioned) escapes the overflow clip and
-       extends the page below the collapsed README */
-    position: relative;
-
-    &.collapsed:not(.animating) {
-      max-height: var(--collapsed-height);
-      overflow: hidden;
-    }
-
-    &.collapsed.overflowing:not(.animating) {
-      mask-image: linear-gradient(
-        to bottom,
-        black calc(var(--collapsed-height) - var(--fade-height)),
-        transparent var(--collapsed-height)
-      );
-    }
-
-    &.animating {
-      overflow: hidden;
-      mask-image: linear-gradient(to bottom, black calc(100% - var(--fade-height)), transparent);
-    }
-  }
-
-  .readme-toggle {
-    display: flex;
-    margin: var(--gap-sm) auto 0;
-    padding: 0.25rem 0.625rem;
-    background: none;
-    border: none;
-    color: var(--purple-light);
-    font-size: 1.5rem;
-    scroll-margin-bottom: var(--sticky-bottom);
-    --sticky-bottom: var(--gap-lg);
-
-    /* Overrides the hover shadow from app.css */
-    &,
-    &:hover {
-      box-shadow: none;
-    }
-
-    &:not(.over-fade) {
-      position: sticky;
-      margin: var(--gap-md) auto 0;
-      bottom: var(--sticky-bottom);
-      z-index: 1;
-      margin-inline-start: 0;
-      background: var(--surface-1);
-      border-radius: 0.75rem;
-
-      &,
-      &:hover {
-        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    /* Outside the collapsible, since its mask would fade the button out too */
-    &.over-fade {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      translate: -50% 0;
-      margin: 0;
     }
   }
 
