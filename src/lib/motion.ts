@@ -1,7 +1,7 @@
 import { MediaQuery } from "svelte/reactivity";
 import type { TransitionConfig } from "svelte/transition";
 
-const prefersReducedMotion = new MediaQuery("prefers-reduced-motion: reduce");
+export const prefersReducedMotion = new MediaQuery("prefers-reduced-motion: reduce");
 
 type IMotionTransitionOptions<T> = {
   fn: (node: Element, params: T) => TransitionConfig;

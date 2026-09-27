@@ -2,6 +2,8 @@ import { prerender } from "$app/server";
 import { getRepositorySource, type RepositorySourceId } from "$lib/repositorySources";
 import { enrichPluginGithub } from "$lib/pluginEnrichers/enrichPluginGithub";
 import { enrichPluginCodeberg } from "$lib/pluginEnrichers/enrichPluginCodeberg";
+import loadReadme, { type ReadmeResult } from "$lib/loadReadme";
+import readPluginFiles from "$lib/readPluginFiles";
 
 export interface IPlugin {
   name: string;
@@ -13,7 +15,6 @@ export interface IPlugin {
   updated_at: Date;
   url: string;
   search_text: string;
-  related?: string[];
 }
 
 export type PluginEnricher = (plugin: IPlugin) => Promise<IPlugin>;
@@ -32,21 +33,21 @@ const enrichersBySourceId: Record<RepositorySourceId, PluginEnricher> = {
  * additional information fetched from its repository host.
  */
 export const getPlugins = prerender<IPlugin[]>(async () => {
-  const pluginJsonFiles = import.meta.glob("/plugins/*.json", {
-    eager: true,
-    query: "?raw",
-    import: "default",
-  });
-  const plugins: IPlugin[] = Object.entries(pluginJsonFiles).map(([path, content]) => {
-    const name =
-      path
-        .split("/")
-        .pop()
-        ?.replace(/\.json$/, "") ?? "";
-    return { name, ...JSON.parse(content) };
-  });
-
   return await Promise.all(
-    plugins.map((plugin) => enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin)),
+    readPluginFiles().map((plugin) =>
+      enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin),
+    ),
   );
 });
+
+export const getReadme = prerender(
+  // Unvalidated, since without `dynamic: true` it's only called with the `inputs` below
+  "unchecked",
+  async (name: string): Promise<ReadmeResult> => {
+    const plugin = readPluginFiles().find((plugin) => plugin.name === name);
+    if (!plugin) return { readme: null, unavailableReason: "no-readme" };
+
+    return (await loadReadme(plugin)).result;
+  },
+  { inputs: () => readPluginFiles().map((plugin) => plugin.name) },
+);

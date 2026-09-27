@@ -157,7 +157,7 @@
             out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
             animate:motionAnimation={{ fn: flip, duration: 400 }}
           >
-            <PluginCard {plugin} showCreatedAt onTagClick={searchForTag} />
+            <PluginCard {plugin} onTagClick={searchForTag} />
           </li>
         {/each}
       </ul>

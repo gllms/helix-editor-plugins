@@ -1,21 +1,22 @@
-export default function timeAgo(date: Date): string {
+const units: [short: string, long: string, seconds: number][] = [
+  ["y", "year", 365 * 24 * 60 * 60],
+  ["mo", "month", 30 * 24 * 60 * 60],
+  ["d", "day", 24 * 60 * 60],
+  ["h", "hour", 60 * 60],
+  ["min", "minute", 60],
+  ["s", "second", 1],
+];
+
+export default function timeAgo(date: Date, long = false): string {
   const now = new Date();
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const units: [string, number][] = [
-    ["year", 365 * 24 * 60 * 60],
-    ["month", 30 * 24 * 60 * 60],
-    ["day", 24 * 60 * 60],
-    ["hour", 60 * 60],
-    ["minute", 60],
-    ["second", 1],
-  ];
 
-  for (const [name, secondsPerUnit] of units) {
+  for (const [short, name, secondsPerUnit] of units) {
     const interval = Math.floor(seconds / secondsPerUnit);
     if (interval >= 1) {
-      return `${interval} ${name}${interval > 1 ? "s" : ""} ago`;
+      return long ? `${interval} ${name}${interval > 1 ? "s" : ""} ago` : `${interval}${short}`;
     }
   }
 
-  return "just now";
+  return long ? "just now" : "now";
 }

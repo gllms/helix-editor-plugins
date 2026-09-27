@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { getPlugins } from "../../plugins.remote";
+  import { getPlugins, getReadme } from "../../plugins.remote";
   import type { PageProps } from "./$types";
   import { resolve } from "$app/paths";
-  import timeAgo from "$lib/timeAgo";
+  import TimeAgo from "$lib/TimeAgo.svelte";
   import getSimilarPlugins from "$lib/getSimilarPlugins";
   import PluginCard from "$lib/PluginCard.svelte";
+  import Readme from "$lib/Readme.svelte";
+  import type { ReadmeUnavailableReason } from "$lib/loadReadme";
   import { generatePluginJsonLd } from "$lib/generateJsonLd";
   import { toSearchHash } from "$lib/searchHash";
   import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
@@ -15,12 +17,14 @@
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
   import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
+  import timeAgo from "$lib/timeAgo";
 
   let { params }: PageProps = $props();
 
   const plugins = await getPlugins();
 
   const plugin = $derived(plugins.find((plugin) => plugin.name === params.plugin));
+  const readmeResult = $derived(await getReadme(params.plugin));
   const similarPlugins = $derived(plugin ? getSimilarPlugins(plugin, plugins) : []);
 
   let pluginsByAuthor = $derived(
@@ -31,6 +35,15 @@
           p.name !== plugin.name,
       ),
   );
+
+  const readmeUnavailableMessages: Record<ReadmeUnavailableReason, string> = {
+    "no-license":
+      "This plugin's README isn't shown here because its repository doesn't have a license.",
+    "license-not-allowed":
+      "This plugin's README isn't shown here because it's unclear whether its license allows that.",
+    "no-readme": "This plugin doesn't have a README.",
+    unavailable: "This plugin's README couldn't be shown here.",
+  };
 </script>
 
 <svelte:head>
@@ -55,7 +68,7 @@
   </a>
 
   <div class="layout">
-    <div>
+    <div class="main-column">
       <article class="plugin-card">
         <h1>
           {plugin.name}
@@ -80,15 +93,21 @@
               <span class="visually-hidden">Stars:</span>
               {plugin.star_count}
             </li>
-            <li class="pill" title="Created: {plugin.created_at.toLocaleString()}">
-              <IconAsteriskBold />
-              <span class="visually-hidden">Created:</span>
-              <time datetime={plugin.created_at.toISOString()}>{timeAgo(plugin.created_at)}</time>
-            </li>
-            <li class="pill" title="Last push: {plugin.updated_at.toLocaleString()}">
+            <li
+              class="pill"
+              title={`Last push:\n${timeAgo(plugin.updated_at, true)}\n${plugin.updated_at.toLocaleString()}`}
+            >
               <IconGitCommitFill />
               <span class="visually-hidden">Last push:</span>
-              <time datetime={plugin.updated_at.toISOString()}>{timeAgo(plugin.updated_at)}</time>
+              <TimeAgo date={plugin.updated_at} long />
+            </li>
+            <li
+              class="pill"
+              title={`Created:\n${timeAgo(plugin.created_at, true)}\n${plugin.created_at.toLocaleString()}`}
+            >
+              <IconAsteriskBold />
+              <span class="visually-hidden">Created:</span>
+              <TimeAgo date={plugin.created_at} long />
             </li>
           </ul>
           {#if plugin.tags?.length}
@@ -106,28 +125,29 @@
           {/if}
         </div>
       </article>
+
+      {#if readmeResult.readme}
+        <Readme readme={readmeResult.readme} {repositoryPath} />
+      {:else}
+        <p class="readme-unavailable">
+          {readmeUnavailableMessages[readmeResult.unavailableReason]}
+          <a href={plugin.url} target="_blank">
+            {readmeResult.unavailableReason === "no-readme" ? "View the repository" : "Read it"} on
+            {source.name}
+            <IconArrowSquareOutBold />
+            <span class="visually-hidden">(opens in a new tab)</span>
+          </a>
+        </p>
+      {/if}
     </div>
 
     <section class="related">
-      {#if plugin.related?.length}
-        <h2>Related plugins</h2>
-        <ul class="plugin-grid" role="list">
-          {#each plugin.related as related (related)}
-            {const relatedPlugin = plugins.find((p) => p.name === related)}
-            {#if relatedPlugin}
-              <li>
-                <PluginCard plugin={relatedPlugin} headingLevel={3} />
-              </li>
-            {/if}
-          {/each}
-        </ul>
-      {/if}
       {#if similarPlugins.length}
         <h2>Related plugins</h2>
         <ul class="plugin-grid" role="list">
           {#each similarPlugins as related (related.name)}
             <li>
-              <PluginCard plugin={related} headingLevel={3} />
+              <PluginCard plugin={related} headingLevel={3} uniformHeight />
             </li>
           {/each}
         </ul>
@@ -137,7 +157,7 @@
         <ul class="plugin-grid" role="list">
           {#each pluginsByAuthor as related (related.name)}
             <li>
-              <PluginCard plugin={related} headingLevel={3} />
+              <PluginCard plugin={related} headingLevel={3} uniformHeight />
             </li>
           {/each}
         </ul>
@@ -150,19 +170,35 @@
 
 <style>
   :global(body):has(.plugin-card) {
+    --layout-gap: var(--gap-lg);
+    --layout-columns: 2;
     --card-center: 50%;
 
+    @media (min-width: 85rem) {
+      --layout-columns: 3;
+    }
+
+    /* Centers the glow on the main column, so keep in sync with .layout below */
     @media (min-width: 60rem) {
-      --card-center: calc(
-        max(0px, 50% - var(--max-width-page) / 2) + var(--padding-page) + var(--card-width) / 2
+      --content-left: calc(max(0px, 50% - var(--max-width-page) / 2) + var(--padding-page));
+      --content-width: calc(min(100%, var(--max-width-page)) - 2 * var(--padding-page));
+      --content-column-width: calc(
+        (var(--content-width) - (var(--layout-columns) - 1) * var(--layout-gap)) /
+          var(--layout-columns)
       );
+      --main-column-width: calc(
+        (var(--layout-columns) - 1) * (var(--content-column-width) + var(--layout-gap)) -
+          var(--layout-gap)
+      );
+      --card-center: calc(var(--content-left) + var(--main-column-width) / 2);
     }
 
     background: radial-gradient(
-      ellipse var(--card-width) 30rem at top 0 left var(--card-center),
-      color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
-      var(--purple-dark)
-    );
+        ellipse var(--card-width) 30rem at top 0 left var(--card-center),
+        color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
+        var(--purple-dark)
+      )
+      no-repeat var(--purple-dark);
   }
 
   .home-button {
@@ -179,24 +215,40 @@
 
   .layout {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    align-items: stretch;
-    margin-top: 6rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-xl);
+    margin-top: 3rem;
+
+    /* The main column floats over all but the last column, so the related plugins, as inline boxes,
+       fill the space next to and under it */
+    @media (min-width: 60rem) {
+      display: block;
+      margin-top: 6rem;
+      container-type: inline-size; /* Also contains the float */
+      --column-width: calc(
+        (100cqw - (var(--layout-columns) - 1) * var(--layout-gap)) / var(--layout-columns)
+      );
+    }
+  }
+
+  .main-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl);
+    min-width: 0;
 
     @media (min-width: 60rem) {
-      grid-template-columns: minmax(0, var(--card-width)) 1fr;
+      float: left;
+      width: calc(
+        (var(--layout-columns) - 1) * (var(--column-width) + var(--layout-gap)) - var(--layout-gap)
+      );
+      margin: 0 var(--layout-gap) var(--layout-gap) 0;
     }
   }
 
   .plugin-card {
     gap: var(--gap-sm);
     background: color-mix(in srgb, var(--surface-1), var(--surface-2) 75%);
-
-    @media (min-width: 60rem) {
-      position: sticky;
-      top: var(--gap-lg);
-    }
 
     h1 {
       display: flex;
@@ -219,15 +271,47 @@
     }
   }
 
-  .related {
-    min-width: 0;
+  .readme-unavailable {
+    margin: 0;
+    padding: var(--gap-lg) 1.75rem;
+    border: 2px dashed var(--border-subtle);
+    border-radius: var(--radius-lg);
 
+    @media (max-width: 576px) {
+      padding: var(--gap-md);
+    }
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--gap-xs);
+    }
+  }
+
+  .related {
     h2 {
       margin-bottom: var(--gap-md);
     }
 
     .plugin-grid {
       margin-bottom: var(--gap-xl);
+
+      @media (min-width: 60rem) {
+        display: block;
+        /* Hides the whitespace between the inline items */
+        font-size: 0;
+        /* Room for the last item's margin in a row, plus a pixel against rounding errors */
+        margin-right: calc(-1 * var(--layout-gap) - 1px);
+        margin-bottom: calc(var(--gap-xl) - var(--layout-gap));
+
+        > li {
+          display: inline-flex;
+          vertical-align: top;
+          width: var(--column-width);
+          margin: 0 var(--layout-gap) var(--layout-gap) 0;
+          font-size: 1rem;
+        }
+      }
     }
   }
 </style>

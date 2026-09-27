@@ -73,10 +73,11 @@ body {
   min-height: 100vh;
   background: var(--purple-dark);
   background: radial-gradient(
-    ellipse 70rem 20rem at top,
-    color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
-    var(--purple-dark)
-  );
+      ellipse 70rem 20rem at top,
+      color-mix(var(--purple-dark), var(--purple-light) 15%) 0,
+      var(--purple-dark)
+    )
+    no-repeat var(--purple-dark);
   color: var(--purple-light);
   font-family:
     Inter,
