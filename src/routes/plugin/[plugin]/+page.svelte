@@ -6,12 +6,12 @@
   import getSimilarPlugins from "$lib/getSimilarPlugins";
   import PluginCard from "$lib/PluginCard.svelte";
   import Readme from "$lib/Readme.svelte";
+  import HomeButton from "$lib/HomeButton.svelte";
   import type { ReadmeUnavailableReason } from "$lib/loadReadme";
   import { generatePluginJsonLd } from "$lib/generateJsonLd";
   import { toSearchHash } from "$lib/searchHash";
   import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
 
-  import IconHouseBold from "phosphor-icons-svelte/IconHouseBold.svelte";
   import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
@@ -63,9 +63,7 @@
   {const source = getRepositorySource(plugin.repository)}
   {const repositoryPath = getRepositoryPath(plugin.repository)}
 
-  <a href={resolve("/")} class="home-button" title="Go to home page" aria-label="Go to home page">
-    <IconHouseBold />
-  </a>
+  <HomeButton />
 
   <div class="layout">
     <div class="main-column">
@@ -199,18 +197,6 @@
         var(--purple-dark)
       )
       no-repeat var(--purple-dark);
-  }
-
-  .home-button {
-    display: grid;
-    place-items: center;
-    border-radius: var(--radius-md);
-    border: none;
-    width: 3rem;
-    aspect-ratio: 1 / 1;
-    font-size: 1.25rem;
-    background: var(--surface-2);
-    color: var(--grey);
   }
 
   .layout {

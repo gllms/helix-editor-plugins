@@ -1,5 +1,6 @@
 <script lang="ts">
-  import HelpDialog from "$lib/HelpDialog.svelte";
+  import { resolve } from "$app/paths";
+  import { page } from "$app/state";
   import previouslyBlurred, { wasPreviouslyBlurred } from "$lib/previouslyBlurred";
   import "../app.css";
 
@@ -16,17 +17,13 @@
 `,
   );
 
-  let helpDialogOpen = $state(false);
-
-  function openHelpDialog(event: MouseEvent) {
-    const button = event.currentTarget as HTMLButtonElement;
+  function onHelpClick(event: MouseEvent) {
+    const link = event.currentTarget as HTMLAnchorElement;
 
     // Allow revealing the other FAB buttons on first tap when the pointer is coarse
-    if (window.matchMedia("(pointer: coarse)").matches && wasPreviouslyBlurred(button)) {
-      return;
+    if (window.matchMedia("(pointer: coarse)").matches && wasPreviouslyBlurred(link)) {
+      event.preventDefault();
     }
-
-    helpDialogOpen = true;
   }
 
   let { children } = $props();
@@ -44,15 +41,16 @@
 </footer>
 
 <div class="fab-container">
-  <button
+  <a
     class="fab"
-    onclick={openHelpDialog}
+    href={resolve("/help")}
+    onclick={onHelpClick}
     title="Help"
-    aria-haspopup="dialog"
+    aria-current={page.route.id === "/help" ? "page" : undefined}
     {@attach previouslyBlurred}
   >
     <IconQuestionFill />
-  </button>
+  </a>
   <a
     class="fab fab-small"
     href="https://github.com/gllms/helix-editor-plugins"
@@ -70,8 +68,6 @@
     <IconPlusBold />
   </a>
 </div>
-
-<HelpDialog bind:open={helpDialogOpen} />
 
 <style>
   footer {

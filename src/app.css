@@ -88,10 +88,6 @@ body {
     sans-serif;
 }
 
-html:has(dialog[open]) {
-  overflow: hidden;
-}
-
 main {
   padding: var(--padding-page);
   max-width: var(--max-width-page);

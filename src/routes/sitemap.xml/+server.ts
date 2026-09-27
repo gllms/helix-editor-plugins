@@ -20,6 +20,7 @@ export const GET: RequestHandler = async () => {
 
   const entries = [
     { loc: `${SITE_URL}/`, lastmod: mostRecentlyUpdated?.updated_at },
+    { loc: `${SITE_URL}/help` },
     ...plugins.map((plugin) => ({ loc: getPluginPageUrl(plugin), lastmod: plugin.updated_at })),
   ];
 
