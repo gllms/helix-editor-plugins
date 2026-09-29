@@ -12,10 +12,10 @@ import type { Component } from "svelte";
 import { render } from "svelte/server";
 import { unified } from "unified";
 import { EXIT, visit } from "unist-util-visit";
+import ExternalLinkIcon from "$lib/ExternalLinkIcon.svelte";
 import type { IReadmeFile } from "$lib/loadReadme";
 import warn from "$lib/warn";
 
-import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
 import IconChatCenteredDotsBold from "phosphor-icons-svelte/IconChatCenteredDotsBold.svelte";
 import IconInfoBold from "phosphor-icons-svelte/IconInfoBold.svelte";
 import IconLightbulbBold from "phosphor-icons-svelte/IconLightbulbBold.svelte";
@@ -43,11 +43,11 @@ const processor = unified()
   // Only lets through the icons, which are added after sanitizing
   .use(rehypeStringify, { allowDangerousHtml: true });
 
-function renderIcon(icon: Component<{ class?: string }>, className?: string) {
+function renderIcon(icon: Component, className?: string) {
   return render(icon, { props: { class: className } }).body.replace(/<!--.*?-->/g, "");
 }
 
-const externalLinkIcon = renderIcon(IconArrowSquareOutBold, "external-link-icon");
+const externalLinkIcon = renderIcon(ExternalLinkIcon);
 const videoUnavailableIcon = renderIcon(IconVideoCameraSlashBold, "video-unavailable-icon");
 
 const alertIcons = {
@@ -221,17 +221,7 @@ function resolveRelativeUrls(tree: Root, readme: IReadmeFile) {
 
         // Links that are only an image, like badges, don't get the icon
         if (toString(node).trim()) {
-          node.children.push(
-            // A word joiner, so the icon can't wrap onto a line of its own
-            { type: "text", value: "⁠" },
-            { type: "raw", value: externalLinkIcon },
-            {
-              type: "element",
-              tagName: "span",
-              properties: { className: ["visually-hidden", "new-tab-hint"] },
-              children: [],
-            },
-          );
+          node.children.push({ type: "raw", value: externalLinkIcon });
         }
       }
     }

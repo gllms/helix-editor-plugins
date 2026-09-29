@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { IReadme } from "$lib/loadReadme";
   import Collapsible from "$lib/Collapsible.svelte";
-
-  import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
+  import ExternalLink from "$lib/ExternalLink.svelte";
 
   let { readme, repositoryPath }: { readme: IReadme; repositoryPath: string } = $props();
 </script>
@@ -19,17 +18,9 @@
   {/key}
 
   <p class="attribution">
-    <a href={readme.url} target="_blank">
-      README from {repositoryPath}
-      <IconArrowSquareOutBold />
-      <span class="visually-hidden new-tab-hint"></span>
-    </a>
+    <ExternalLink href={readme.url}>README from {repositoryPath}</ExternalLink>
     ·
-    <a href={readme.license.url} target="_blank">
-      {readme.license.name}
-      <IconArrowSquareOutBold />
-      <span class="visually-hidden new-tab-hint"></span>
-    </a>
+    <ExternalLink href={readme.license.url}>{readme.license.name}</ExternalLink>
   </p>
 </section>
 
@@ -53,7 +44,7 @@
     border-top: 2px solid var(--border-subtle);
     font-size: 0.875rem;
 
-    a {
+    :global(a) {
       display: inline-flex;
       align-items: center;
       gap: var(--gap-xs);

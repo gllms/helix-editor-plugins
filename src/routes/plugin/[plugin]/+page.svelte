@@ -7,12 +7,12 @@
   import PluginCard from "$lib/PluginCard.svelte";
   import Readme from "$lib/Readme.svelte";
   import HomeButton from "$lib/HomeButton.svelte";
+  import ExternalLink from "$lib/ExternalLink.svelte";
   import type { ReadmeUnavailableReason } from "$lib/loadReadme";
   import { generatePluginJsonLd } from "$lib/generateJsonLd";
   import { toSearchHash } from "$lib/searchHash";
   import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
 
-  import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
@@ -73,18 +73,11 @@
         </h1>
         <p>{plugin.description}</p>
         <div class="pill-container-container">
-          <a
-            class="pill"
-            href={plugin.url}
-            target="_blank"
-            title="Go to the {plugin.name} repository"
-          >
+          <ExternalLink class="pill" href={plugin.url} title="Go to the {plugin.name} repository">
             <source.icon />
             <span class="visually-hidden">{source.name} repository:</span>
             {repositoryPath}
-            <IconArrowSquareOutBold />
-            <span class="visually-hidden new-tab-hint"></span>
-          </a>
+          </ExternalLink>
           <ul class="pill-container" role="list">
             <li class="pill">
               <IconStarFill />
@@ -129,12 +122,10 @@
       {:else}
         <p class="readme-unavailable">
           {readmeUnavailableMessages[readmeResult.unavailableReason]}
-          <a href={plugin.url} target="_blank">
+          <ExternalLink href={plugin.url}>
             {readmeResult.unavailableReason === "no-readme" ? "View the repository" : "Read it"} on
             {source.name}
-            <IconArrowSquareOutBold />
-            <span class="visually-hidden new-tab-hint"></span>
-          </a>
+          </ExternalLink>
         </p>
       {/if}
     </div>
@@ -249,7 +240,7 @@
       gap: var(--gap-md);
     }
 
-    a.pill {
+    :global(a.pill) {
       &,
       &:visited {
         color: var(--grey);
@@ -267,7 +258,7 @@
       padding: var(--gap-md);
     }
 
-    a {
+    :global(a) {
       display: inline-flex;
       align-items: center;
       gap: var(--gap-xs);
