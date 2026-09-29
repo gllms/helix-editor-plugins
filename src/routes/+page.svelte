@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { getPlugins, type IPlugin } from "./plugins.remote";
-  import { onMount } from "svelte";
+  import { getPlugins } from "./plugins.remote";
+  import { onMount, untrack } from "svelte";
   import { on } from "svelte/events";
   import { MediaQuery } from "svelte/reactivity";
   import { replaceState } from "$app/navigation";
@@ -11,7 +11,14 @@
   import createSearchText from "$lib/createSearchText";
   import filterAndSortPlugins from "$lib/filterAndSortPlugins";
   import generateJsonLd from "$lib/generateJsonLd";
-  import { fromSearchHash, toSearchHash } from "$lib/searchHash";
+  import {
+    defaultSortDirection,
+    fromSearchHash,
+    sortOptions,
+    toSearchHash,
+    type SortBy,
+    type SortDirection,
+  } from "$lib/searchHash";
 
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
@@ -26,8 +33,8 @@
   }
 
   let searchQuery = $state<string>("");
-  let sortBy = $state<keyof IPlugin | "magic">("magic");
-  let sortDirection = $state<"asc" | "desc">("desc");
+  let sortBy = $state<SortBy>("magic");
+  let sortDirection = $state<SortDirection>("desc");
   let tagsCollapsible = $state<ReturnType<typeof Collapsible>>();
 
   const sidebarLayout = new MediaQuery("min-width: 60rem");
@@ -65,21 +72,29 @@
     };
   }
 
-  onMount(() => {
-    searchQuery = fromSearchHash(location.hash);
-  });
+  function readHash() {
+    ({ query: searchQuery, sortBy, sortDirection } = fromSearchHash(location.hash));
+  }
+
+  onMount(readHash);
 
   $effect(() => {
-    const hash = toSearchHash(searchQuery);
-    if (location.hash === hash) return;
-    replaceState(location.pathname + location.search + hash, page.state);
+    const hash = toSearchHash({ query: searchQuery, sortBy, sortDirection });
+    // Hash navigations update page.url and page.state before hashchange fires, so rerunning on
+    // those would overwrite the new hash with the old search
+    untrack(() => {
+      if (location.hash === hash) return;
+      replaceState(location.pathname + location.search + hash, page.state);
+    });
   });
 
-  $effect.pre(() => {
-    if (sortBy === "name") sortDirection = "asc";
-    else sortDirection = "desc";
-  });
+  function changeSortBy(value: SortBy) {
+    sortBy = value;
+    sortDirection = defaultSortDirection(value);
+  }
 </script>
+
+<svelte:window onhashchange={readHash} />
 
 <svelte:head>
   <title>Helix Editor Plugins</title>
@@ -99,12 +114,10 @@
     <div class="search-container">
       <input type="search" placeholder="Search..." bind:value={searchQuery} />
       <div class="sort-controls">
-        <select bind:value={sortBy} title="Sort by">
-          <option value="magic">Magic</option>
-          <option value="star_count">Stars</option>
-          <option value="updated_at">Last updated</option>
-          <option value="created_at">Created</option>
-          <option value="name">Name</option>
+        <select bind:value={() => sortBy, changeSortBy} title="Sort by">
+          {#each Object.entries(sortOptions) as [value, label] (value)}
+            <option {value}>{label}</option>
+          {/each}
         </select>
         <button
           onclick={() => (sortDirection = sortDirection === "asc" ? "desc" : "asc")}

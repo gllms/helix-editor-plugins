@@ -112,7 +112,7 @@
             <ul class="pill-container" role="list">
               {#each plugin.tags.toSorted() as tag (tag)}
                 <li>
-                  <a href="{resolve('/')}{toSearchHash('#' + tag)}" class="pill">
+                  <a href="{resolve('/')}{toSearchHash({ query: '#' + tag })}" class="pill">
                     <IconHashBold />
                     <span class="visually-hidden">Search by tag:</span>
                     {tag}
