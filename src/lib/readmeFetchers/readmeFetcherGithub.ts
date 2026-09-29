@@ -28,6 +28,28 @@ async function fetchGithub<T>(url: string): Promise<T | null> {
   return (await response.json()) as T;
 }
 
+// GitHub doesn't serve some uploaded videos to visitors who aren't signed in, but its own rendering
+// of the README links to all of them, for a few minutes
+async function fetchVideoUrls(repositoryPath: string) {
+  const url = `https://api.github.com/repos/${repositoryPath}/readme`;
+  const response = await fetch(url, {
+    headers: { ...headers, Accept: "application/vnd.github.html" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub API returned ${response.status} for ${url}`);
+  }
+
+  const videoUrls = new Map<string, string>();
+  for (const [, src] of (await response.text()).matchAll(/<video\s[^>]*?\bsrc="([^"]+)"/g)) {
+    const videoUrl = src.replaceAll("&amp;", "&");
+    const id = /[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}/.exec(videoUrl)?.[0];
+    if (id) videoUrls.set(`https://github.com/user-attachments/assets/${id}`, videoUrl);
+  }
+
+  return videoUrls;
+}
+
 export const readmeFetcherGithub: IReadmeFetcher = {
   async fetchLicense(repositoryPath) {
     const payload = await fetchGithub<IGitHubLicenseFile>(
@@ -46,11 +68,16 @@ export const readmeFetcherGithub: IReadmeFetcher = {
     );
     if (!payload) return null;
 
+    const markdown = Buffer.from(payload.content, "base64").toString("utf8");
+
     return {
-      markdown: Buffer.from(payload.content, "base64").toString("utf8"),
+      markdown,
       path: payload.path,
       rawUrl: payload.download_url,
       htmlUrl: payload.html_url,
+      videoUrls: markdown.includes("github.com/user-attachments/assets/")
+        ? await fetchVideoUrls(repositoryPath)
+        : undefined,
     };
   },
 };

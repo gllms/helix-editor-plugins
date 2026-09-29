@@ -1,7 +1,7 @@
 import { getAllowedLicenseName } from "$lib/licenses";
 import { readmeFetcherCodeberg } from "$lib/readmeFetchers/readmeFetcherCodeberg";
 import { readmeFetcherGithub } from "$lib/readmeFetchers/readmeFetcherGithub";
-import renderReadme, { type IReadmeImage } from "$lib/renderReadme";
+import renderReadme, { type IReadmeAsset } from "$lib/renderReadme";
 import {
   getRepositoryPath,
   getRepositorySource,
@@ -20,6 +20,7 @@ export interface IReadmeFile {
   path: string;
   rawUrl: string;
   htmlUrl: string;
+  videoUrls?: Map<string, string>;
 }
 
 export interface IReadmeFetcher {
@@ -41,7 +42,7 @@ export type ReadmeResult =
 
 interface ILoadedReadme {
   result: ReadmeResult;
-  images: Map<string, IReadmeImage>;
+  assets: Map<string, IReadmeAsset>;
 }
 
 const readmeFetchersBySourceId: Record<RepositorySourceId, IReadmeFetcher> = {
@@ -63,7 +64,7 @@ export default function loadReadme(
 }
 
 function unavailable(unavailableReason: ReadmeUnavailableReason): ILoadedReadme {
-  return { result: { readme: null, unavailableReason }, images: new Map() };
+  return { result: { readme: null, unavailableReason }, assets: new Map() };
 }
 
 async function fetchAndRenderReadme(
@@ -99,17 +100,17 @@ async function fetchAndRenderReadme(
       return unavailable("unavailable");
     }
 
-    const { html, images } = await renderReadme(readmeFile, {
+    const { html, assets } = await renderReadme(readmeFile, {
       pluginName: plugin.name,
       // Relative to /plugin/[plugin], the page READMEs are shown on
-      getImageUrl: (fileName) => `../readme-assets/${encodeURIComponent(plugin.name)}/${fileName}`,
+      getAssetUrl: (fileName) => `../readme-assets/${encodeURIComponent(plugin.name)}/${fileName}`,
     });
 
     return {
       result: {
         readme: { html, url: readmeFile.htmlUrl, license: { name: licenseName, url: license.url } },
       },
-      images,
+      assets,
     };
   } catch (error) {
     warn(

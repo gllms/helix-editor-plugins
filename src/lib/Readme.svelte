@@ -98,7 +98,7 @@
         font-size: 1rem;
       }
 
-      :is(p, ul, ol, blockquote, pre, table, details) {
+      :is(p, ul, ol, blockquote, pre, table, details, video) {
         margin: 0.75rem 0;
       }
 
@@ -130,6 +130,27 @@
         height: auto;
         vertical-align: middle;
         border-radius: var(--radius-sm);
+      }
+
+      video {
+        display: block;
+        max-width: 100%;
+        max-height: 40rem;
+        border-radius: var(--radius-sm);
+      }
+
+      .video-unavailable {
+        padding: var(--gap-xl) var(--gap-md);
+        border: 2px dashed var(--border-subtle);
+        border-radius: var(--radius-sm);
+        text-align: center;
+      }
+
+      .video-unavailable-icon {
+        display: block;
+        margin: 0 auto var(--gap-sm);
+        color: var(--purple-light);
+        font-size: 2rem;
       }
 
       :is(pre, code, kbd) {

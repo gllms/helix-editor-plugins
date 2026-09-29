@@ -19,10 +19,11 @@ import IconArrowSquareOutBold from "phosphor-icons-svelte/IconArrowSquareOutBold
 import IconChatCenteredDotsBold from "phosphor-icons-svelte/IconChatCenteredDotsBold.svelte";
 import IconInfoBold from "phosphor-icons-svelte/IconInfoBold.svelte";
 import IconLightbulbBold from "phosphor-icons-svelte/IconLightbulbBold.svelte";
+import IconVideoCameraSlashBold from "phosphor-icons-svelte/IconVideoCameraSlashBold.svelte";
 import IconWarningBold from "phosphor-icons-svelte/IconWarningBold.svelte";
 import IconWarningOctagonBold from "phosphor-icons-svelte/IconWarningOctagonBold.svelte";
 
-export interface IReadmeImage {
+export interface IReadmeAsset {
   body: ArrayBuffer;
   type: string;
 }
@@ -47,6 +48,7 @@ function renderIcon(icon: Component<{ class?: string }>, className?: string) {
 }
 
 const externalLinkIcon = renderIcon(IconArrowSquareOutBold, "external-link-icon");
+const videoUnavailableIcon = renderIcon(IconVideoCameraSlashBold, "video-unavailable-icon");
 
 const alertIcons = {
   note: IconInfoBold,
@@ -58,19 +60,20 @@ const alertIcons = {
 
 export default async function renderReadme(
   readme: IReadmeFile,
-  options: { pluginName: string; getImageUrl: (fileName: string) => string },
+  options: { pluginName: string; getAssetUrl: (fileName: string) => string },
 ) {
   const tree = await processor.run(processor.parse(readme.markdown));
 
   replacePicturesWithDarkImages(tree);
   renderAlerts(tree);
   removeTitle(tree, options.pluginName);
+  const videos = await embedVideos(tree, readme, options.getAssetUrl);
   resolveRelativeUrls(tree, readme);
   fixFragmentLinks(tree);
   shiftHeadings(tree);
-  const images = await downloadImages(tree, readme, options.getImageUrl);
+  const images = await downloadImages(tree, readme, options.getAssetUrl);
 
-  return { html: processor.stringify(tree), images };
+  return { html: processor.stringify(tree), assets: new Map([...videos, ...images]) };
 }
 
 function removeTitle(tree: Root, pluginName: string) {
@@ -149,6 +152,62 @@ function replacePicturesWithDarkImages(tree: Root) {
     parent.children.splice(index, 1, ...(img ? [img] : []));
     return index;
   });
+}
+
+async function embedVideos(
+  tree: Root,
+  readme: IReadmeFile,
+  getAssetUrl: (fileName: string) => string,
+) {
+  const videos = new Map<string, IReadmeAsset>();
+  const paragraphs: { node: Element; href: string; url: string }[] = [];
+  visit(tree, "element", (node) => {
+    if (node.tagName !== "p") return;
+
+    const [link, ...rest] = node.children.filter(
+      (child) => child.type !== "text" || child.value.trim(),
+    );
+    const href = link?.type === "element" && link.tagName === "a" && link.properties.href;
+    const url = typeof href === "string" && readme.videoUrls?.get(href);
+    if (!rest.length && url) paragraphs.push({ node, href, url });
+  });
+
+  await Promise.all(
+    paragraphs.map(async ({ node, href, url }) => {
+      try {
+        const { fileName, asset } = await downloadAsset(url, detectVideoType);
+        videos.set(fileName, asset);
+
+        node.tagName = "video";
+        node.properties = {
+          src: getAssetUrl(fileName),
+          controls: true,
+          muted: true,
+          preload: "metadata",
+        };
+        node.children = [];
+      } catch (error) {
+        warn(
+          "README video not embedded",
+          `Couldn't download ${href} in ${readme.htmlUrl}, so a placeholder is shown instead: ${error instanceof Error ? error.message : error}`,
+        );
+
+        node.properties = { className: ["video-unavailable"] };
+        node.children = [
+          { type: "raw", value: videoUnavailableIcon },
+          { type: "text", value: "This video couldn't be shown here. " },
+          {
+            type: "element",
+            tagName: "a",
+            properties: { href: readme.htmlUrl },
+            children: [{ type: "text", value: "Watch it on GitHub" }],
+          },
+        ];
+      }
+    }),
+  );
+
+  return videos;
 }
 
 function resolveRelativeUrls(tree: Root, readme: IReadmeFile) {
@@ -251,9 +310,9 @@ function shiftHeadings(tree: Root) {
 async function downloadImages(
   tree: Root,
   readme: IReadmeFile,
-  getImageUrl: (fileName: string) => string,
+  getAssetUrl: (fileName: string) => string,
 ) {
-  const images = new Map<string, IReadmeImage>();
+  const images = new Map<string, IReadmeAsset>();
   const imgElements: Element[] = [];
   visit(tree, "element", (node) => {
     if (node.tagName === "img" && typeof node.properties.src === "string") imgElements.push(node);
@@ -268,9 +327,9 @@ async function downloadImages(
       if (!fileNamesByUrl.has(src)) {
         fileNamesByUrl.set(
           src,
-          downloadImage(src).then(
-            ({ fileName, image }) => {
-              images.set(fileName, image);
+          downloadAsset(src, detectImageType).then(
+            ({ fileName, asset }) => {
+              images.set(fileName, asset);
               return fileName;
             },
             (error) => {
@@ -285,7 +344,7 @@ async function downloadImages(
       }
 
       const fileName = await fileNamesByUrl.get(src);
-      if (fileName) img.properties.src = getImageUrl(fileName);
+      if (fileName) img.properties.src = getAssetUrl(fileName);
       img.properties.loading = "lazy";
     }),
   );
@@ -293,7 +352,10 @@ async function downloadImages(
   return images;
 }
 
-async function downloadImage(url: string) {
+async function downloadAsset(
+  url: string,
+  detectType: (body: ArrayBuffer) => { type: string; extension: string } | null,
+) {
   const response = await fetch(url, {
     // Some hosts, like Wikimedia, reject requests without a descriptive user agent
     headers: { "User-Agent": USER_AGENT },
@@ -305,16 +367,16 @@ async function downloadImage(url: string) {
   }
 
   const body = await response.arrayBuffer();
-  const imageType = detectImageType(body);
-  if (!imageType) {
-    throw new Error(`Unsupported image type ${response.headers.get("Content-Type")}`);
+  const assetType = detectType(body);
+  if (!assetType) {
+    throw new Error(`Unsupported file type ${response.headers.get("Content-Type")}`);
   }
 
   const hash = createHash("sha256").update(Buffer.from(body)).digest("hex").slice(0, 16);
 
   return {
-    fileName: `${hash}.${imageType.extension}`,
-    image: { body, type: imageType.type },
+    fileName: `${hash}.${assetType.extension}`,
+    asset: { body, type: assetType.type },
   };
 }
 
@@ -329,6 +391,16 @@ function detectImageType(body: ArrayBuffer) {
   }
   if (/^.{4}ftypavi[fs]/s.test(head)) return { type: "image/avif", extension: "avif" };
   if (/<svg[\s>]/i.test(head)) return { type: "image/svg+xml", extension: "svg" };
+
+  return null;
+}
+
+function detectVideoType(body: ArrayBuffer) {
+  const head = Buffer.from(body, 0, Math.min(body.byteLength, 4096)).toString("latin1");
+
+  if (head.startsWith("\x1a\x45\xdf\xa3")) return { type: "video/webm", extension: "webm" };
+  if (/^.{4}ftypqt/s.test(head)) return { type: "video/quicktime", extension: "mov" };
+  if (/^.{4}ftyp/s.test(head)) return { type: "video/mp4", extension: "mp4" };
 
   return null;
 }

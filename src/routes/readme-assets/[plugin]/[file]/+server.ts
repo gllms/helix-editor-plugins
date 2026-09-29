@@ -8,9 +8,9 @@ export const prerender = true;
 
 export const GET: RequestHandler = async ({ params }) => {
   const plugin = readPluginFiles().find((plugin) => plugin.name === params.plugin);
-  const image = plugin && (await loadReadme(plugin)).images.get(params.file);
+  const asset = plugin && (await loadReadme(plugin)).assets.get(params.file);
 
-  if (!image) error(404, "Not found");
+  if (!asset) error(404, "Not found");
 
-  return new Response(image.body, { headers: { "Content-Type": image.type } });
+  return new Response(asset.body, { headers: { "Content-Type": asset.type } });
 };
