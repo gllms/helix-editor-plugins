@@ -22,13 +22,13 @@
     <a href={readme.url} target="_blank">
       README from {repositoryPath}
       <IconArrowSquareOutBold />
-      <span class="visually-hidden">(opens in a new tab)</span>
+      <span class="visually-hidden new-tab-hint"></span>
     </a>
     ·
     <a href={readme.license.url} target="_blank">
       {readme.license.name}
       <IconArrowSquareOutBold />
-      <span class="visually-hidden">(opens in a new tab)</span>
+      <span class="visually-hidden new-tab-hint"></span>
     </a>
   </p>
 </section>

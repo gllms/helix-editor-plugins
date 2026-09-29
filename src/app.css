@@ -267,6 +267,11 @@ a.pill,
   white-space: nowrap;
 }
 
+/* Generated content is read by screen readers, but not indexed by search engines */
+.new-tab-hint::after {
+  content: "(opens in a new tab)";
+}
+
 @media (max-width: 576px) {
   main {
     padding: 1rem;

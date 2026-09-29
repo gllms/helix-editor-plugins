@@ -83,7 +83,7 @@
             <span class="visually-hidden">{source.name} repository:</span>
             {repositoryPath}
             <IconArrowSquareOutBold />
-            <span class="visually-hidden">(opens in a new tab)</span>
+            <span class="visually-hidden new-tab-hint"></span>
           </a>
           <ul class="pill-container" role="list">
             <li class="pill">
@@ -133,7 +133,7 @@
             {readmeResult.unavailableReason === "no-readme" ? "View the repository" : "Read it"} on
             {source.name}
             <IconArrowSquareOutBold />
-            <span class="visually-hidden">(opens in a new tab)</span>
+            <span class="visually-hidden new-tab-hint"></span>
           </a>
         </p>
       {/if}

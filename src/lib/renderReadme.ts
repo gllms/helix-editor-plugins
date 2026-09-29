@@ -228,8 +228,8 @@ function resolveRelativeUrls(tree: Root, readme: IReadmeFile) {
             {
               type: "element",
               tagName: "span",
-              properties: { className: ["visually-hidden"] },
-              children: [{ type: "text", value: " (opens in a new tab)" }],
+              properties: { className: ["visually-hidden", "new-tab-hint"] },
+              children: [],
             },
           );
         }
