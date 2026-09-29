@@ -26,3 +26,19 @@ export function motionAnimation<T>(
   if (prefersReducedMotion.current === true) return undefined!;
   return options.fn(node, fromTo, options);
 }
+
+/** Animates the height of `element` in pixels, along with the properties in `extraKeyframes` */
+export function animateHeight(
+  element: Element,
+  fromHeight: number,
+  toHeight: number,
+  extraKeyframes: [Keyframe, Keyframe] = [{}, {}],
+) {
+  return element.animate(
+    [
+      { ...extraKeyframes[0], height: `${fromHeight}px` },
+      { ...extraKeyframes[1], height: `${toHeight}px` },
+    ],
+    { duration: 300, easing: "ease-out" },
+  );
+}

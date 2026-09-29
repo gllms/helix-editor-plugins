@@ -1,6 +1,6 @@
 <script lang="ts">
   import { flushSync, type Snippet } from "svelte";
-  import { prefersReducedMotion } from "$lib/motion";
+  import { animateHeight, prefersReducedMotion } from "$lib/motion";
 
   import IconArrowsOutSimpleBold from "phosphor-icons-svelte/IconArrowsOutSimpleBold.svelte";
   import IconArrowsInSimpleBold from "phosphor-icons-svelte/IconArrowsInSimpleBold.svelte";
@@ -65,13 +65,10 @@
     flushSync(() => (animating = true));
     const fadeHeights = [fadeHeight, "0px"];
     if (!expanded) fadeHeights.reverse();
-    animation = collapsible.animate(
-      [
-        { height: `${fromHeight}px`, "--fade-height": fadeHeights[0] },
-        { height: `${toHeight}px`, "--fade-height": fadeHeights[1] },
-      ],
-      { duration: 300, easing: "ease-out" },
-    );
+    animation = animateHeight(collapsible, fromHeight, toHeight, [
+      { "--fade-height": fadeHeights[0] },
+      { "--fade-height": fadeHeights[1] },
+    ]);
     animation.finished.then(
       () => (animating = false),
       () => {},
