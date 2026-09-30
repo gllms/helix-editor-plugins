@@ -49,7 +49,7 @@
 <svelte:head>
   <title
     >{plugin
-      ? `${plugin.name} - Helix Editor Plugins`
+      ? `${plugin.name}: ${plugin.description}`
       : "Plugin not found - Helix Editor Plugins"}</title
   >
   <meta name="description" content={plugin ? plugin.description : "Plugin not found."} />
