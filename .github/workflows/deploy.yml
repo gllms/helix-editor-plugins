@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          # The sitemap uses the git history to tell when pages last changed
+          fetch-depth: 0
 
       - name: Install Node.js
         uses: actions/setup-node@v6

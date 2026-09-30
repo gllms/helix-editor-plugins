@@ -18,7 +18,6 @@
 
 <article class="help">
   <h1>Helix plugin FAQ</h1>
-  <p class="last-updated">Last updated <time datetime="2026-09-29">September 29, 2026</time></p>
 
   <Faq id="supported" question="Does Helix support plugins?">
     <p>
@@ -251,16 +250,11 @@ cargo xtask steel</pre>
     }
 
     h1 {
-      margin: 0 0 var(--gap-xs);
+      margin: 0 0 var(--gap-md);
       font-family: var(--font-display-700);
       font-size: 2rem;
       font-weight: 700;
       text-align: left;
-    }
-
-    .last-updated {
-      font-size: 0.875rem;
-      opacity: 0.7;
     }
 
     h3 {

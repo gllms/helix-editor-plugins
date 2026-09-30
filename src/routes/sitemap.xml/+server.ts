@@ -1,4 +1,5 @@
 import { getPluginPageUrl, SITE_URL } from "$lib/generateJsonLd";
+import getLastCommitDates from "$lib/getLastCommitDates";
 import { getPlugins } from "../plugins.remote";
 import type { RequestHandler } from "./$types";
 
@@ -10,18 +11,29 @@ function escapeXml(value: string) {
   return value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 }
 
+function latest(...dates: (Date | undefined)[]) {
+  const times = dates.filter((date) => date !== undefined).map((date) => date.getTime());
+  return times.length > 0 ? new Date(Math.max(...times)) : undefined;
+}
+
 export const GET: RequestHandler = async () => {
   const plugins = await getPlugins();
+  const commitDates = getLastCommitDates("plugins");
+  const helpPage = "src/routes/help/+page.svelte";
 
-  // The home page lists every plugin, so it's as fresh as the most recently updated one
-  const [mostRecentlyUpdated] = plugins.toSorted(
-    (a, b) => b.updated_at.getTime() - a.updated_at.getTime(),
-  );
+  const pluginEntries = plugins.map((plugin) => ({
+    loc: getPluginPageUrl(plugin),
+    lastmod: latest(plugin.updated_at, commitDates.get(`plugins/${plugin.name}.json`)),
+  }));
 
   const entries = [
-    { loc: `${SITE_URL}/`, lastmod: mostRecentlyUpdated?.updated_at },
-    { loc: `${SITE_URL}/help` },
-    ...plugins.map((plugin) => ({ loc: getPluginPageUrl(plugin), lastmod: plugin.updated_at })),
+    // The home page lists every plugin, so it changes when one does, or when one is removed
+    {
+      loc: `${SITE_URL}/`,
+      lastmod: latest(...pluginEntries.map(({ lastmod }) => lastmod), ...commitDates.values()),
+    },
+    { loc: `${SITE_URL}/help`, lastmod: getLastCommitDates(helpPage).get(helpPage) },
+    ...pluginEntries,
   ];
 
   const urls = entries.map(
