@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { IPlugin } from "../routes/plugins.remote";
   import TimeAgo from "#lib/TimeAgo.svelte";
-  import { getRepositoryPath, getRepositorySource } from "#lib/repositorySources.js";
 
+  import IconUserBold from "phosphor-icons-svelte/IconUserBold.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
   import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
@@ -12,24 +12,16 @@
   interface IPluginCardProps {
     plugin: IPlugin;
     headingLevel?: 2 | 3;
-    uniformHeight?: boolean;
     onTagClick?: (tag: string) => void;
   }
 
-  let { plugin, headingLevel = 2, uniformHeight = false }: IPluginCardProps = $props();
-
-  const source = $derived(getRepositorySource(plugin.repository));
+  let { plugin, headingLevel = 2 }: IPluginCardProps = $props();
 </script>
 
-<a class="plugin-card" class:uniform-height={uniformHeight} href={resolve(`plugin/${plugin.name}`)}>
+<a class="plugin-card" href={resolve(`plugin/${plugin.name}`)}>
   <svelte:element this={`h${headingLevel}`}>{plugin.name}</svelte:element>
   <p>{plugin.description}</p>
   <ul class="pill-container" role="list">
-    <li class="pill repository-pill">
-      <source.icon />
-      <span class="visually-hidden">{source.name} repository:</span>
-      <span class="repository-path">{getRepositoryPath(plugin.repository)}</span>
-    </li>
     <li class="pill">
       <IconStarFill />
       <span class="visually-hidden">Stars:</span>
@@ -51,11 +43,16 @@
       <span class="visually-hidden">Created:</span>
       <TimeAgo date={plugin.created_at} />
     </li>
+    <li class="pill author-pill">
+      <IconUserBold />
+      <span class="visually-hidden">Author:</span>
+      <span class="author-name">{plugin.author.name}</span>
+    </li>
   </ul>
 </a>
 
 <style>
-  .uniform-height {
+  a {
     min-width: 0;
 
     > :is(h2, h3) {
@@ -78,29 +75,27 @@
     .pill-container {
       height: calc(1lh + 2 * var(--gap-xs));
       overflow: hidden;
-      font-family: var(--font-display-500);
-      font-weight: 500;
-    }
 
-    .pill {
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
-
-    .repository-pill {
-      /* 8rem including padding, since pills use content-box sizing */
-      flex: 1 1 calc(8rem - 2 * var(--gap-sm));
-      min-width: 0;
-      max-width: max-content;
-
-      :global(svg) {
+      .pill {
         flex-shrink: 0;
+        white-space: nowrap;
       }
-    }
 
-    .repository-path {
-      overflow: hidden;
-      text-overflow: ellipsis;
+      .author-pill {
+        /* Including padding, since pills use content-box sizing */
+        flex: 1 1 calc(4rem - 2 * var(--gap-sm));
+        min-width: 0;
+        max-width: max-content;
+
+        :global(svg) {
+          flex-shrink: 0;
+        }
+
+        .author-name {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 </style>

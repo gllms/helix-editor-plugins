@@ -19,6 +19,8 @@ export default function createSearchText(plugin: IPlugin) {
     " " +
     plugin.repository +
     " " +
+    plugin.author.name +
+    " " +
     (tagsAndSynonyms.map((t) => "#" + t).join(" ") || "")
   ).toLowerCase();
 }

@@ -1,5 +1,4 @@
 import type { IPlugin } from "../routes/plugins.remote";
-import { getRepositoryPath } from "./repositorySources";
 
 export const SITE_URL = "https://helix-editor-plugins.com";
 
@@ -9,7 +8,6 @@ export function getPluginPageUrl(plugin: IPlugin) {
 
 function pluginToSoftwareApplication(plugin: IPlugin) {
   const pageUrl = getPluginPageUrl(plugin);
-  const owner = getRepositoryPath(plugin.repository).split("/")[0];
 
   return {
     "@type": "SoftwareApplication",
@@ -20,8 +18,8 @@ function pluginToSoftwareApplication(plugin: IPlugin) {
     sameAs: plugin.url,
     author: {
       "@type": "Person",
-      name: owner,
-      url: `${new URL(plugin.url).origin}/${owner}`,
+      name: plugin.author.name,
+      url: plugin.author.url,
     },
     operatingSystem: ["Linux", "macOS", "Windows"],
     offers: {

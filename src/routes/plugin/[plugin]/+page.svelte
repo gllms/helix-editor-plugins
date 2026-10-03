@@ -13,6 +13,7 @@
   import { toSearchHash } from "#lib/searchHash.js";
   import { getRepositoryPath, getRepositorySource } from "#lib/repositorySources.js";
 
+  import IconUserBold from "phosphor-icons-svelte/IconUserBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
@@ -73,11 +74,30 @@
         </h1>
         <p>{plugin.description}</p>
         <div class="pill-container-container">
-          <ExternalLink class="pill" href={plugin.url} title="Go to the {plugin.name} repository">
-            <source.icon />
-            <span class="visually-hidden">{source.name} repository:</span>
-            {repositoryPath}
-          </ExternalLink>
+          <ul class="pill-container" role="list">
+            <li>
+              <ExternalLink
+                class="pill"
+                href={plugin.author.url}
+                title="Go to the {source.name} profile of {plugin.author.name}"
+              >
+                <IconUserBold />
+                <span class="visually-hidden">Author:</span>
+                {plugin.author.name}
+              </ExternalLink>
+            </li>
+            <li>
+              <ExternalLink
+                class="pill"
+                href={plugin.url}
+                title="Go to the {plugin.name} repository"
+              >
+                <source.icon />
+                <span class="visually-hidden">{source.name} repository:</span>
+                {repositoryPath}
+              </ExternalLink>
+            </li>
+          </ul>
           <ul class="pill-container" role="list">
             <li class="pill">
               <IconStarFill />
@@ -136,17 +156,17 @@
         <ul class="plugin-grid" role="list">
           {#each similarPlugins as related (related.name)}
             <li>
-              <PluginCard plugin={related} headingLevel={3} uniformHeight />
+              <PluginCard plugin={related} headingLevel={3} />
             </li>
           {/each}
         </ul>
       {/if}
       {#if pluginsByAuthor?.length}
-        <h2>More by {repositoryPath.split("/").shift()}</h2>
+        <h2>More by {plugin.author.name}</h2>
         <ul class="plugin-grid" role="list">
           {#each pluginsByAuthor as related (related.name)}
             <li>
-              <PluginCard plugin={related} headingLevel={3} uniformHeight />
+              <PluginCard plugin={related} headingLevel={3} />
             </li>
           {/each}
         </ul>

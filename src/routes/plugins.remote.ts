@@ -5,6 +5,11 @@ import { enrichPluginCodeberg } from "#lib/pluginEnrichers/enrichPluginCodeberg.
 import loadReadme, { type ReadmeResult } from "#lib/loadReadme.js";
 import readPluginFiles from "#lib/readPluginFiles.js";
 
+export interface IAuthor {
+  name: string;
+  url: string;
+}
+
 export interface IPlugin {
   name: string;
   description: string;
@@ -14,6 +19,7 @@ export interface IPlugin {
   created_at: Date;
   updated_at: Date;
   url: string;
+  author: IAuthor;
   search_text: string;
 }
 

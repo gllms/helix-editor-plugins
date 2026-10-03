@@ -7,6 +7,7 @@ interface ICodebergRepository {
   created_at: string;
   updated_at: string;
   html_url: string;
+  owner: { login: string; full_name: string; html_url: string };
 }
 
 export const enrichPluginCodeberg: PluginEnricher = async (plugin) => {
@@ -31,5 +32,9 @@ export const enrichPluginCodeberg: PluginEnricher = async (plugin) => {
     created_at: payload.created_at ? new Date(payload.created_at) : new Date(0),
     updated_at: payload.updated_at ? new Date(payload.updated_at) : new Date(0),
     url: payload.html_url,
+    author: {
+      name: payload.owner.full_name || payload.owner.login,
+      url: payload.owner.html_url,
+    },
   };
 };
