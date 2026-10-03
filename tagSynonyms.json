@@ -1,5 +1,4 @@
 [
-  ["activity", "presence", "time-tracking", "tracking"],
   ["animation", "effects", "transitions"],
   ["auto-reload", "reload", "file-watcher", "watch"],
   ["blame", "annotate", "git-blame"],
@@ -26,7 +25,7 @@
   ["search", "find", "lookup", "query", "grep"],
   ["selections", "selection", "selecting", "multiple-selections", "multi-cursor"],
   ["splits", "panes", "window-management"],
-  ["stats", "statistics", "metrics", "analytics"],
+  ["stats", "activity", "analytics", "metrics", "presence", "statistics", "time-tracking", "tracking"],
   ["statusline", "status-line", "statusbar", "status-bar", "bufferline", "tabline"],
   ["terminal", "shell", "pty", "console", "cli"],
   ["tree-sitter", "treesitter", "syntax-tree", "ast", "structural", "nodes"],

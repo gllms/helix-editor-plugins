@@ -1,0 +1,5 @@
+{
+  "description": "A fork of presence.hx with customisation and multi-instance support",
+  "repository": "norinorin/helix-discord-rpc",
+  "tags": ["discord", "integration", "stats"]
+}
