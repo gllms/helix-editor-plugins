@@ -1,5 +1,5 @@
-import { API_TOKEN_GITHUB } from "$env/static/private";
-import type { IReadmeFetcher } from "$lib/loadReadme";
+import { API_TOKEN_GITHUB } from "$app/env/private";
+import type { IReadmeFetcher } from "#lib/loadReadme.js";
 
 interface IGitHubFile {
   path: string;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { IPlugin } from "../routes/plugins.remote";
-  import TimeAgo from "$lib/TimeAgo.svelte";
-  import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
+  import TimeAgo from "#lib/TimeAgo.svelte";
+  import { getRepositoryPath, getRepositorySource } from "#lib/repositorySources.js";
 
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
@@ -21,11 +21,7 @@
   const source = $derived(getRepositorySource(plugin.repository));
 </script>
 
-<a
-  class="plugin-card"
-  class:uniform-height={uniformHeight}
-  href={resolve(`/plugin/${plugin.name}`)}
->
+<a class="plugin-card" class:uniform-height={uniformHeight} href={resolve(`plugin/${plugin.name}`)}>
   <svelte:element this={`h${headingLevel}`}>{plugin.name}</svelte:element>
   <p>{plugin.description}</p>
   <ul class="pill-container" role="list">

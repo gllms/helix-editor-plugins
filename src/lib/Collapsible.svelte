@@ -1,6 +1,6 @@
 <script lang="ts">
   import { flushSync, type Snippet } from "svelte";
-  import { animateHeight, prefersReducedMotion } from "$lib/motion";
+  import { animateHeight, prefersReducedMotion } from "#lib/motion.js";
 
   import IconArrowsOutSimpleBold from "phosphor-icons-svelte/IconArrowsOutSimpleBold.svelte";
   import IconArrowsInSimpleBold from "phosphor-icons-svelte/IconArrowsInSimpleBold.svelte";

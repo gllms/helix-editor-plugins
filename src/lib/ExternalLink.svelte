@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes } from "svelte/elements";
-  import ExternalLinkIcon from "$lib/ExternalLinkIcon.svelte";
+  import ExternalLinkIcon from "#lib/ExternalLinkIcon.svelte";
 
   let { children, ...attributes }: HTMLAnchorAttributes = $props();
 </script>

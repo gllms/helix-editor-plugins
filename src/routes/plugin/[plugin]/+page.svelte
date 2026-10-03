@@ -2,22 +2,22 @@
   import { getPlugins, getReadme } from "../../plugins.remote";
   import type { PageProps } from "./$types";
   import { resolve } from "$app/paths";
-  import TimeAgo from "$lib/TimeAgo.svelte";
-  import getSimilarPlugins from "$lib/getSimilarPlugins";
-  import PluginCard from "$lib/PluginCard.svelte";
-  import Readme from "$lib/Readme.svelte";
-  import HomeButton from "$lib/HomeButton.svelte";
-  import ExternalLink from "$lib/ExternalLink.svelte";
-  import type { ReadmeUnavailableReason } from "$lib/loadReadme";
-  import { generatePluginJsonLd } from "$lib/generateJsonLd";
-  import { toSearchHash } from "$lib/searchHash";
-  import { getRepositoryPath, getRepositorySource } from "$lib/repositorySources";
+  import TimeAgo from "#lib/TimeAgo.svelte";
+  import getSimilarPlugins from "#lib/getSimilarPlugins.js";
+  import PluginCard from "#lib/PluginCard.svelte";
+  import Readme from "#lib/Readme.svelte";
+  import HomeButton from "#lib/HomeButton.svelte";
+  import ExternalLink from "#lib/ExternalLink.svelte";
+  import type { ReadmeUnavailableReason } from "#lib/loadReadme.js";
+  import { generatePluginJsonLd } from "#lib/generateJsonLd.js";
+  import { toSearchHash } from "#lib/searchHash.js";
+  import { getRepositoryPath, getRepositorySource } from "#lib/repositorySources.js";
 
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
   import IconStarFill from "phosphor-icons-svelte/IconStarFill.svelte";
   import IconAsteriskBold from "phosphor-icons-svelte/IconAsteriskBold.svelte";
   import IconGitCommitFill from "phosphor-icons-svelte/IconGitCommitFill.svelte";
-  import timeAgo from "$lib/timeAgo";
+  import timeAgo from "#lib/timeAgo.js";
 
   let { params }: PageProps = $props();
 

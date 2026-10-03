@@ -1,5 +1,5 @@
 <script lang="ts">
-  import timeAgo from "$lib/timeAgo";
+  import timeAgo from "#lib/timeAgo.js";
 
   let { date, long = false }: { date: Date; long?: boolean } = $props();
 </script>

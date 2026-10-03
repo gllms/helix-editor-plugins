@@ -1,5 +1,5 @@
-import { API_TOKEN_CODEBERG } from "$env/static/private";
-import { getRepositoryPath } from "$lib/repositorySources";
+import { API_TOKEN_CODEBERG } from "$app/env/private";
+import { getRepositoryPath } from "#lib/repositorySources.js";
 import type { PluginEnricher } from "../../routes/plugins.remote";
 
 interface ICodebergRepository {

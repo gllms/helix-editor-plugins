@@ -1,5 +1,5 @@
-import { getPluginPageUrl, SITE_URL } from "$lib/generateJsonLd";
-import getLastCommitDates from "$lib/getLastCommitDates";
+import { getPluginPageUrl, SITE_URL } from "#lib/generateJsonLd.js";
+import getLastCommitDates from "#lib/getLastCommitDates.js";
 import { getPlugins } from "../plugins.remote";
 import type { RequestHandler } from "./$types";
 

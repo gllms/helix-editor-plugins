@@ -1,9 +1,9 @@
 import { prerender } from "$app/server";
-import { getRepositorySource, type RepositorySourceId } from "$lib/repositorySources";
-import { enrichPluginGithub } from "$lib/pluginEnrichers/enrichPluginGithub";
-import { enrichPluginCodeberg } from "$lib/pluginEnrichers/enrichPluginCodeberg";
-import loadReadme, { type ReadmeResult } from "$lib/loadReadme";
-import readPluginFiles from "$lib/readPluginFiles";
+import { getRepositorySource, type RepositorySourceId } from "#lib/repositorySources.js";
+import { enrichPluginGithub } from "#lib/pluginEnrichers/enrichPluginGithub.js";
+import { enrichPluginCodeberg } from "#lib/pluginEnrichers/enrichPluginCodeberg.js";
+import loadReadme, { type ReadmeResult } from "#lib/loadReadme.js";
+import readPluginFiles from "#lib/readPluginFiles.js";
 
 export interface IPlugin {
   name: string;

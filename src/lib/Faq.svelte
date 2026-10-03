@@ -5,9 +5,9 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
   import { on } from "svelte/events";
-  import { pushState, replaceState } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { animateHeight, prefersReducedMotion } from "$lib/motion";
+  import { animateHeight, prefersReducedMotion } from "#lib/motion.js";
 
   import IconCaretDownBold from "phosphor-icons-svelte/IconCaretDownBold.svelte";
 
@@ -34,7 +34,11 @@
 
     const hash = `#${id}`;
     if (value ? location.hash !== hash : location.hash === hash) {
-      replaceState(location.pathname + location.search + (value ? hash : ""), page.state);
+      goto(location.pathname + location.search + (value ? hash : ""), {
+        shallow: true,
+        replace: true,
+        state: page.state,
+      });
     }
 
     // Measured before cancelling, so toggling halfway continues from the current height
@@ -106,7 +110,7 @@
         if (!event.defaultPrevented) return;
         // SvelteKit cancels the navigation when it thinks the URL already has this hash, since its
         // URL isn't updated by replaceState
-        pushState(location.pathname + location.search + link.hash, page.state);
+        goto(location.pathname + location.search + link.hash, { shallow: true, state: page.state });
       }
       openIfLinkedTo(link.hash);
     });
@@ -122,13 +126,11 @@
 </script>
 
 <details {id} class:expanded bind:this={details} {ontoggle}>
-  <summary bind:this={summary} onclick={toggle}>
-    <h2>{question}</h2>
-    <IconCaretDownBold />
-  </summary>
-  <div class="answer">
-    {@render children()}
-  </div>
+  <summary bind:this={summary} onclick={toggle}
+    ><h2>{question}</h2>
+    <IconCaretDownBold /></summary
+  >
+  <div class="answer">{@render children()}</div>
 </details>
 
 <style>

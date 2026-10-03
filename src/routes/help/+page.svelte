@@ -1,8 +1,8 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import HomeButton from "$lib/HomeButton.svelte";
-  import ExternalLink from "$lib/ExternalLink.svelte";
-  import Faq from "$lib/Faq.svelte";
+  import HomeButton from "#lib/HomeButton.svelte";
+  import ExternalLink from "#lib/ExternalLink.svelte";
+  import Faq from "#lib/Faq.svelte";
 </script>
 
 <svelte:head>

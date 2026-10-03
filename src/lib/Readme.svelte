@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { IReadme } from "$lib/loadReadme";
-  import Collapsible from "$lib/Collapsible.svelte";
-  import ExternalLink from "$lib/ExternalLink.svelte";
+  import type { IReadme } from "#lib/loadReadme.js";
+  import Collapsible from "#lib/Collapsible.svelte";
+  import ExternalLink from "#lib/ExternalLink.svelte";
 
   let { readme, repositoryPath }: { readme: IReadme; repositoryPath: string } = $props();
 </script>

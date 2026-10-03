@@ -3,14 +3,14 @@
   import { onMount, untrack } from "svelte";
   import { on } from "svelte/events";
   import { MediaQuery } from "svelte/reactivity";
-  import { replaceState } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { flip } from "svelte/animate";
   import { scale } from "svelte/transition";
-  import { motionAnimation, motionTransition } from "$lib/motion";
-  import createSearchText from "$lib/createSearchText";
-  import filterAndSortPlugins from "$lib/filterAndSortPlugins";
-  import generateJsonLd from "$lib/generateJsonLd";
+  import { motionAnimation, motionTransition } from "#lib/motion.js";
+  import createSearchText from "#lib/createSearchText.js";
+  import filterAndSortPlugins from "#lib/filterAndSortPlugins.js";
+  import generateJsonLd from "#lib/generateJsonLd.js";
   import {
     defaultSortDirection,
     fromSearchHash,
@@ -18,13 +18,13 @@
     toSearchHash,
     type SortBy,
     type SortDirection,
-  } from "$lib/searchHash";
+  } from "#lib/searchHash.js";
 
   import IconSortAscendingBold from "phosphor-icons-svelte/IconSortAscendingBold.svelte";
   import IconSortDescendingBold from "phosphor-icons-svelte/IconSortDescendingBold.svelte";
   import IconHashBold from "phosphor-icons-svelte/IconHashBold.svelte";
-  import Collapsible from "$lib/Collapsible.svelte";
-  import PluginCard from "$lib/PluginCard.svelte";
+  import Collapsible from "#lib/Collapsible.svelte";
+  import PluginCard from "#lib/PluginCard.svelte";
 
   const plugins = await getPlugins();
 
@@ -84,7 +84,11 @@
     // those would overwrite the new hash with the old search
     untrack(() => {
       if (location.hash === hash) return;
-      replaceState(location.pathname + location.search + hash, page.state);
+      goto(location.pathname + location.search + hash, {
+        shallow: true,
+        replace: true,
+        state: page.state,
+      });
     });
   });
 
@@ -104,9 +108,9 @@
 </svelte:head>
 
 <h1>
-  <button onclick={() => (searchQuery = "")} title="Clear search" aria-label="Clear search">
-    Helix Editor Plugins
-  </button>
+  <button onclick={() => (searchQuery = "")} title="Clear search" aria-label="Clear search"
+    >Helix Editor Plugins</button
+  >
 </h1>
 
 <div class="layout">
@@ -167,7 +171,7 @@
     {#if sortedPlugins.length === 0}
       <p class="empty-state">
         {#if searchQuery}
-          No plugins found for &ldquo;{searchQuery}&rdquo;.
+          No plugins found for “{searchQuery}”.
         {:else}
           No plugins found.
         {/if}

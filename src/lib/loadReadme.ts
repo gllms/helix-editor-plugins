@@ -1,13 +1,13 @@
-import { getAllowedLicenseName } from "$lib/licenses";
-import { readmeFetcherCodeberg } from "$lib/readmeFetchers/readmeFetcherCodeberg";
-import { readmeFetcherGithub } from "$lib/readmeFetchers/readmeFetcherGithub";
-import renderReadme, { type IReadmeAsset } from "$lib/renderReadme";
+import { getAllowedLicenseName } from "#lib/licenses.js";
+import { readmeFetcherCodeberg } from "#lib/readmeFetchers/readmeFetcherCodeberg.js";
+import { readmeFetcherGithub } from "#lib/readmeFetchers/readmeFetcherGithub.js";
+import renderReadme, { type IReadmeAsset } from "#lib/renderReadme.js";
 import {
   getRepositoryPath,
   getRepositorySource,
   type RepositorySourceId,
-} from "$lib/repositorySources";
-import warn from "$lib/warn";
+} from "#lib/repositorySources.js";
+import warn from "#lib/warn.js";
 import type { IPlugin } from "../routes/plugins.remote";
 
 export interface ILicenseFile {

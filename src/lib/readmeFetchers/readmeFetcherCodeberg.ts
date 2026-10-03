@@ -1,6 +1,6 @@
-import { API_TOKEN_CODEBERG } from "$env/static/private";
-import { detectLicense } from "$lib/licenses";
-import type { IReadmeFetcher } from "$lib/loadReadme";
+import { API_TOKEN_CODEBERG } from "$app/env/private";
+import { detectLicense } from "#lib/licenses.js";
+import type { IReadmeFetcher } from "#lib/loadReadme.js";
 
 interface ICodebergFile {
   name: string;
@@ -30,6 +30,7 @@ async function findRootFile(repositoryPath: string, pattern: RegExp) {
     `https://codeberg.org/api/v1/repos/${repositoryPath}/contents`,
   );
   const files = (await response.json()) as ICodebergFile[];
+
   return files.find((file) => file.type === "file" && pattern.test(file.name));
 }
 

@@ -12,9 +12,9 @@ import type { Component } from "svelte";
 import { render } from "svelte/server";
 import { unified } from "unified";
 import { EXIT, visit } from "unist-util-visit";
-import ExternalLinkIcon from "$lib/ExternalLinkIcon.svelte";
-import type { IReadmeFile } from "$lib/loadReadme";
-import warn from "$lib/warn";
+import ExternalLinkIcon from "#lib/ExternalLinkIcon.svelte";
+import type { IReadmeFile } from "#lib/loadReadme.js";
+import warn from "#lib/warn.js";
 
 import IconChatCenteredDotsBold from "phosphor-icons-svelte/IconChatCenteredDotsBold.svelte";
 import IconInfoBold from "phosphor-icons-svelte/IconInfoBold.svelte";

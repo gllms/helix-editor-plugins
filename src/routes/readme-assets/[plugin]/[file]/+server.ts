@@ -1,6 +1,6 @@
 import { error } from "@sveltejs/kit";
-import loadReadme from "$lib/loadReadme";
-import readPluginFiles from "$lib/readPluginFiles";
+import loadReadme from "#lib/loadReadme.js";
+import readPluginFiles from "#lib/readPluginFiles.js";
 import type { RequestHandler } from "./$types";
 
 // +server.ts routes don't inherit the `prerender` option from +layout.ts

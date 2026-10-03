@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import previouslyBlurred, { wasPreviouslyBlurred } from "$lib/previouslyBlurred";
+  import previouslyBlurred, { wasPreviouslyBlurred } from "#lib/previouslyBlurred.js";
   import "../app.css";
 
   import IconGithubLogoFill from "phosphor-icons-svelte/IconGithubLogoFill.svelte";
@@ -43,7 +43,7 @@
 <div class="fab-container">
   <a
     class="fab"
-    href={resolve("/help")}
+    href={resolve("help")}
     onclick={onHelpClick}
     title="Help"
     aria-current={page.route.id === "/help" ? "page" : undefined}
