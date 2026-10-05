@@ -1,0 +1,5 @@
+{
+  "description": "Drive a running Helix from another process over a local TCP port",
+  "repository": "waddie/remote.hx",
+  "tags": ["integration", "terminal", "utility", "workflow"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Seamlessly navigate between Zellij panes and Helix splits",
+  "repository": "dmyyy/zj-navigator.hx",
+  "tags": ["integration", "keys", "navigation", "splits", "terminal", "workflow"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Switch between pinned files using configured shortcuts or a custom picker",
+  "repository": "piotrkwarcinski/hx-pin",
+  "tags": ["bookmarks", "files", "navigation", "picker", "projects", "ui"]
+}

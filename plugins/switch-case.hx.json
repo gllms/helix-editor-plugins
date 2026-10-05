@@ -1,0 +1,5 @@
+{
+  "description": "Text case conversion commands for Helix",
+  "repository": "waddie/switch-case.hx",
+  "tags": ["editing", "selections", "text-transform"]
+}

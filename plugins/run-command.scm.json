@@ -1,0 +1,5 @@
+{
+  "description": "Run shell commands from Steel plugins, capturing their output and exit status, with an optional timeout",
+  "repository": "waddie/run-command.scm",
+  "tags": ["cog", "terminal", "utility"]
+}

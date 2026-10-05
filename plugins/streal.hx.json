@@ -1,5 +1,5 @@
 {
   "description": "Bookmark files and quickly switch between them",
   "repository": "gllms/streal.hx",
-  "tags": ["files", "navigation", "ui"]
+  "tags": ["bookmarks", "files", "navigation", "projects", "ui"]
 }

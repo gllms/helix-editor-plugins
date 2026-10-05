@@ -1,0 +1,5 @@
+{
+  "description": "A picker to restart, stop and read the logs of the language servers attached to the current buffer",
+  "repository": "brnosouza/lsp-picker.hx",
+  "tags": ["language-support", "lsp", "picker", "ui"]
+}
