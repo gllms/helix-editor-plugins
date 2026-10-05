@@ -1,18 +1,17 @@
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
 import type { IPlugin } from "../routes/plugins.remote";
 
-const pluginJsonFiles = import.meta.glob<string>("/plugins/*.json", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
+const PLUGINS_DIR = "plugins";
 
+// Not `import.meta.glob`: SvelteKit treats any module named `remote.*` as a remote functions file,
+// which breaks importing a plugin file like remote.hx.json
 export default function readPluginFiles(): IPlugin[] {
-  return Object.entries(pluginJsonFiles).map(([path, content]) => {
-    const name =
-      path
-        .split("/")
-        .pop()
-        ?.replace(/\.json$/, "") ?? "";
-    return { name, ...JSON.parse(content) };
-  });
+  return readdirSync(PLUGINS_DIR)
+    .filter((file) => file.endsWith(".json"))
+    .sort()
+    .map((file) => {
+      const content = readFileSync(path.join(PLUGINS_DIR, file), "utf8");
+      return { name: file.replace(/\.json$/, ""), ...JSON.parse(content) };
+    });
 }
