@@ -7,7 +7,7 @@
   import { on } from "svelte/events";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import { animateHeight, prefersReducedMotion } from "#lib/motion.js";
+  import { animateHeight, animationClock, prefersReducedMotion } from "#lib/motion.js";
 
   import IconCaretDownBold from "phosphor-icons-svelte/IconCaretDownBold.svelte";
 
@@ -67,18 +67,25 @@
     await othersCollapsed;
   }
 
-  function setExpandedInPlace(value: boolean, animate?: boolean) {
-    const top = summary.getBoundingClientRect().top;
+  function setExpandedInPlace(
+    value: boolean,
+    animate = !prefersReducedMotion.current,
+    scrollIntoView = false,
+  ) {
+    const fromTop = details.getBoundingClientRect().top;
+    const toTop = scrollIntoView ? parseFloat(getComputedStyle(details).scrollMarginTop) : fromTop;
+    const scroll = animate && fromTop !== toTop ? animationClock(details) : undefined;
     let done = false;
     // Also when it fails, since the page can't be scrolled until it's done
     setExpanded(value, animate).finally(() => (done = true));
 
-    // Collapsing the open one moves this one if it was above it
     cancelAnimationFrame(keepInPlaceFrame);
-    keepInPlaceFrame = requestAnimationFrame(function keepInPlace() {
-      window.scrollBy(0, summary.getBoundingClientRect().top - top);
-      if (!done) keepInPlaceFrame = requestAnimationFrame(keepInPlace);
-    });
+    (function keepInPlace() {
+      const progress = scroll?.effect!.getComputedTiming().progress ?? 1;
+      const top = fromTop + (toTop - fromTop) * progress;
+      window.scrollBy({ top: details.getBoundingClientRect().top - top, behavior: "instant" });
+      if (!done || progress < 1) keepInPlaceFrame = requestAnimationFrame(keepInPlace);
+    })();
   }
 
   function toggle(event: MouseEvent) {
@@ -93,27 +100,33 @@
 
   onMount(() => {
     function openIfLinkedTo(hash: string, animate?: boolean) {
-      if (hash !== `#${id}`) return;
-      details.scrollIntoView();
-      if (!expanded) setExpandedInPlace(true, animate);
+      if (hash === `#${id}`) setExpandedInPlace(true, animate, true);
     }
 
     openIfLinkedTo(location.hash, false);
     const offHashChange = on(window, "hashchange", () => openIfLinkedTo(location.hash));
-    // Clicking a link to the hash the URL already has doesn't fire hashchange
-    const offClick = on(document, "click", (event) => {
-      const link = (event.target as Element).closest("a");
-      if (link?.origin !== location.origin || link.pathname !== location.pathname) return;
+    // Captured, so neither SvelteKit nor the browser jumps to it before it's scrolled to smoothly
+    const offClick = on(
+      window,
+      "click",
+      async (event) => {
+        if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const link = (event.target as Element).closest("a");
+        if (link?.origin !== location.origin || link.pathname !== location.pathname) return;
+        if (link.hash !== `#${id}` || (link.target && link.target !== "_self")) return;
 
-      if (link.hash !== location.hash) {
-        // Otherwise hashchange opens it
-        if (!event.defaultPrevented) return;
-        // SvelteKit cancels the navigation when it thinks the URL already has this hash, since its
-        // URL isn't updated by replaceState
-        goto(location.pathname + location.search + link.hash, { shallow: true, state: page.state });
-      }
-      openIfLinkedTo(link.hash);
-    });
+        event.preventDefault();
+        summary.focus({ preventScroll: true });
+        if (location.hash !== link.hash) {
+          await goto(location.pathname + location.search + link.hash, {
+            shallow: true,
+            state: page.state,
+          });
+        }
+        openIfLinkedTo(link.hash);
+      },
+      { capture: true },
+    );
     return () => {
       offHashChange();
       offClick();

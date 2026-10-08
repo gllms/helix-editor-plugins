@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { disableScrollHandling, onNavigate } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
+  import { prefersReducedMotion } from "#lib/motion.js";
   import previouslyBlurred, { wasPreviouslyBlurred } from "#lib/previouslyBlurred.js";
   import "../app.css";
 
@@ -25,6 +27,20 @@
       event.preventDefault();
     }
   }
+
+  onNavigate(({ type, from, to }) => {
+    if (!to || to.url.pathname === from?.url.pathname || prefersReducedMotion.current) return;
+
+    let scroll;
+
+    if (type === "popstate") scroll = to.scroll;
+    else if ((type === "link" || type === "goto") && !to.url.hash) scroll = { x: 0, y: 0 };
+
+    if (!scroll) return;
+
+    disableScrollHandling();
+    return () => window.scrollTo({ left: scroll.x, top: scroll.y, behavior: "smooth" });
+  });
 
   let { children } = $props();
 </script>

@@ -51,13 +51,18 @@ function center(rect: DOMRect) {
   return [rect.left + rect.width / 2, rect.top + rect.height / 2];
 }
 
+/** An animation without keyframes, whose progress drives things that can't be keyframed, like scrolling */
+export function animationClock(element: Element) {
+  return element.animate(null, { duration, easing });
+}
+
 /** Similar to `flip` in Svelte, but animates the element along an arc instead of a straight line, and handles sticky elements better.  */
 export function animatePosition(element: HTMLElement, from: DOMRect, to: DOMRect) {
   const [fromX, fromY] = center(from);
   const [toX, toY] = center(to);
   const [controlX, controlY] = fromY < toY ? [fromX, toY] : [toX, fromY];
   const [startScrollX, startScrollY] = [window.scrollX, window.scrollY];
-  const clock = element.animate(null, { duration, easing });
+  const clock = animationClock(element);
   const [startLayoutX, startLayoutY] = center(element.getBoundingClientRect());
   let [offsetX, offsetY] = [0, 0];
   let frame = 0;
