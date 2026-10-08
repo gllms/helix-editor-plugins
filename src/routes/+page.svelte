@@ -99,14 +99,16 @@
     });
   });
 
-  function shortFlip(
+  function flipOrScale(
     node: Element,
     fromTo: { from: DOMRect; to: DOMRect },
     params: Parameters<typeof flip>[2],
   ) {
+    if (!animateCards) return undefined!;
     const { from, to } = fromTo;
     const distance = Math.hypot(to.left - from.left, to.top - from.top);
-    if (!animateCards || distance > window.innerHeight) return undefined!;
+    // Too far to fly across the page, so it appears in its new spot like an incoming card
+    if (distance > window.innerHeight) return scale(node, { start: 0.9 });
     return flip(node, fromTo, params);
   }
 
@@ -200,7 +202,7 @@
           <li
             in:motionTransition={{ fn: scale, start: 0.9 }}
             out:motionTransition={{ fn: scale, duration: animateCards ? 200 : 0, start: 0.9 }}
-            animate:motionAnimation={{ fn: shortFlip, duration: 400 }}
+            animate:motionAnimation={{ fn: flipOrScale, duration: 400 }}
           >
             <PluginCard {plugin} onTagClick={searchForTag} />
           </li>
