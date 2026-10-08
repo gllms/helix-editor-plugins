@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getPlugins } from "./plugins.remote";
-  import { onMount, untrack } from "svelte";
+  import { onMount, tick, untrack } from "svelte";
   import { on } from "svelte/events";
   import { MediaQuery } from "svelte/reactivity";
   import { goto } from "$app/navigation";
@@ -76,7 +76,14 @@
     ({ query: searchQuery, sortBy, sortDirection } = fromSearchHash(location.hash));
   }
 
-  onMount(readHash);
+  // Don't animate cards for the initial query
+  let animateCards = $state(false);
+
+  onMount(async () => {
+    readHash();
+    await tick();
+    animateCards = true;
+  });
 
   $effect(() => {
     const hash = toSearchHash({ query: searchQuery, sortBy, sortDirection });
@@ -91,6 +98,17 @@
       });
     });
   });
+
+  function shortFlip(
+    node: Element,
+    fromTo: { from: DOMRect; to: DOMRect },
+    params: Parameters<typeof flip>[2],
+  ) {
+    const { from, to } = fromTo;
+    const distance = Math.hypot(to.left - from.left, to.top - from.top);
+    if (!animateCards || distance > window.innerHeight) return undefined!;
+    return flip(node, fromTo, params);
+  }
 
   function changeSortBy(value: SortBy) {
     sortBy = value;
@@ -181,8 +199,8 @@
         {#each sortedPlugins as plugin (plugin.name)}
           <li
             in:motionTransition={{ fn: scale, start: 0.9 }}
-            out:motionTransition={{ fn: scale, duration: 200, start: 0.9 }}
-            animate:motionAnimation={{ fn: flip, duration: 400 }}
+            out:motionTransition={{ fn: scale, duration: animateCards ? 200 : 0, start: 0.9 }}
+            animate:motionAnimation={{ fn: shortFlip, duration: 400 }}
           >
             <PluginCard {plugin} onTagClick={searchForTag} />
           </li>

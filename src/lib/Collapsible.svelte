@@ -1,6 +1,6 @@
 <script lang="ts">
   import { flushSync, type Snippet } from "svelte";
-  import { animateHeight, prefersReducedMotion } from "#lib/motion.js";
+  import { animateHeight, animatePosition, prefersReducedMotion } from "#lib/motion.js";
 
   import IconArrowsOutSimpleBold from "phosphor-icons-svelte/IconArrowsOutSimpleBold.svelte";
   import IconArrowsInSimpleBold from "phosphor-icons-svelte/IconArrowsInSimpleBold.svelte";
@@ -35,8 +35,10 @@
   }
 
   let collapsible: HTMLDivElement;
+  let toggle = $state<HTMLButtonElement>();
   let animating = $state(false);
   let animation: Animation | undefined;
+  let toggleAnimation: ReturnType<typeof animatePosition> | undefined;
 
   export function collapse() {
     if (expanded) setExpanded(false);
@@ -45,7 +47,9 @@
   function setExpanded(value: boolean, button?: HTMLButtonElement) {
     // Measured before cancelling, so toggling halfway continues from the current height
     const fromHeight = collapsible.getBoundingClientRect().height;
+    const toggleFrom = toggle?.getBoundingClientRect();
     animation?.cancel();
+    toggleAnimation?.cancel();
 
     // Measured without .animating, which lifts the max-height
     flushSync(() => {
@@ -59,20 +63,28 @@
       if (top < 0 || bottom > window.innerHeight) button.scrollIntoView({ block: "end" });
     }
 
-    if (prefersReducedMotion.current || fromHeight === toHeight) return;
+    if (prefersReducedMotion.current) return;
 
-    // Animated in JS, since max-height can't be transitioned to none
-    flushSync(() => (animating = true));
-    const fadeHeights = [fadeHeight, "0px"];
-    if (!expanded) fadeHeights.reverse();
-    animation = animateHeight(collapsible, fromHeight, toHeight, [
-      { "--fade-height": fadeHeights[0] },
-      { "--fade-height": fadeHeights[1] },
-    ]);
-    animation.finished.then(
-      () => (animating = false),
-      () => {},
-    );
+    const toggleTo = toggle?.getBoundingClientRect();
+
+    if (fromHeight !== toHeight) {
+      // Animated in JS, since max-height can't be transitioned to none
+      flushSync(() => (animating = true));
+      const fadeHeights = [fadeHeight, "0px"];
+      if (!expanded) fadeHeights.reverse();
+      animation = animateHeight(collapsible, fromHeight, toHeight, [
+        { "--fade-height": fadeHeights[0] },
+        { "--fade-height": fadeHeights[1] },
+      ]);
+      animation.finished.then(
+        () => (animating = false),
+        () => {},
+      );
+    }
+
+    if (toggle && toggleFrom && toggleTo) {
+      toggleAnimation = animatePosition(toggle, toggleFrom, toggleTo);
+    }
   }
 </script>
 
@@ -101,17 +113,16 @@
     <button
       class="collapsible-toggle"
       class:over-fade={!expanded}
+      bind:this={toggle}
       onclick={(event) => setExpanded(!expanded, event.currentTarget)}
       aria-expanded={expanded}
       aria-controls={collapsibleId}
       aria-label={expanded ? `Collapse ${label}` : `Expand ${label}`}
       title={expanded ? `Collapse ${label}` : `Expand ${label}`}
     >
-      {#if expanded}
-        <IconArrowsInSimpleBold />
-      {:else}
-        <IconArrowsOutSimpleBold />
-      {/if}
+      <!-- Both rendered so they can crossfade -->
+      <span class="toggle-icon" class:visible={expanded}><IconArrowsInSimpleBold /></span>
+      <span class="toggle-icon" class:visible={!expanded}><IconArrowsOutSimpleBold /></span>
     </button>
   {/if}
 </div>
@@ -159,31 +170,45 @@
   }
 
   .collapsible-toggle {
-    display: flex;
+    display: grid;
     margin: var(--gap-sm) auto 0;
     padding: 0.25rem 0.625rem;
     background: none;
     border: none;
+    border-radius: 0.75rem;
     color: var(--purple-light);
     font-size: 1.5rem;
+    z-index: 1;
     scroll-margin-bottom: var(--sticky-bottom);
     --sticky-bottom: var(--gap-lg);
+
+    @media (prefers-reduced-motion: no-preference) {
+      /* Keeps the transform and filter transitions from app.css, which this replaces */
+      transition:
+        transform var(--transition-base),
+        filter var(--transition-base),
+        box-shadow 300ms ease-out,
+        background-color 300ms ease-out,
+        color 300ms ease-out;
+    }
 
     /* Overrides the hover shadow from app.css */
     &,
     &:hover {
       box-shadow: none;
+
+      @media (pointer: coarse) {
+        filter: none;
+      }
     }
 
     &:not(.over-fade) {
       position: sticky;
       margin: var(--gap-md) auto 0;
       bottom: var(--sticky-bottom);
-      z-index: 1;
       margin-inline-start: 0;
       background: var(--purple-light);
       color: white;
-      border-radius: 0.75rem;
 
       &,
       &:hover {
@@ -195,9 +220,28 @@
     &.over-fade {
       position: absolute;
       bottom: 0;
-      left: 50%;
-      translate: -50% 0;
-      margin: 0;
+      /* Centered without translate, which animatePosition uses */
+      inset-inline: 0;
+      width: fit-content;
+      margin: 0 auto;
+    }
+  }
+
+  .toggle-icon {
+    grid-area: 1 / 1;
+    display: flex;
+    opacity: 0;
+    scale: 0.5;
+
+    &.visible {
+      opacity: 1;
+      scale: 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        opacity 300ms ease-out,
+        scale 300ms ease-out;
     }
   }
 </style>
