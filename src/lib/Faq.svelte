@@ -110,7 +110,8 @@
       window,
       "click",
       async (event) => {
-        if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+          return;
         const link = (event.target as Element).closest("a");
         if (link?.origin !== location.origin || link.pathname !== location.pathname) return;
         if (link.hash !== `#${id}` || (link.target && link.target !== "_self")) return;
