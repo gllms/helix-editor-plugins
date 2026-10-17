@@ -3,7 +3,7 @@ import type { IPlugin } from "../routes/plugins.remote";
 export const sortOptions = {
   magic: "Magic",
   star_count: "Stars",
-  updated_at: "Last updated",
+  last_commit_at: "Last updated",
   created_at: "Created",
   name: "Name",
 } satisfies Partial<Record<keyof IPlugin | "magic", string>>;

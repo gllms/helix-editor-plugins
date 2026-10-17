@@ -23,7 +23,7 @@ export const GET: RequestHandler = async () => {
 
   const pluginEntries = plugins.map((plugin) => ({
     loc: getPluginPageUrl(plugin),
-    lastmod: latest(plugin.updated_at, commitDates.get(`plugins/${plugin.name}.json`)),
+    lastmod: latest(plugin.last_commit_at, commitDates.get(`plugins/${plugin.name}.json`)),
   }));
 
   const entries = [

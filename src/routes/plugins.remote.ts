@@ -17,7 +17,10 @@ export interface IPlugin {
   tags?: string[];
   star_count: number;
   created_at: Date;
-  updated_at: Date;
+  /** Date of the latest commit on the default branch */
+  last_commit_at: Date;
+  /** Date of the latest default branch commit not made by a bot such as Dependabot */
+  last_human_commit_at: Date;
   url: string;
   author: IAuthor;
   search_text: string;

@@ -17,7 +17,8 @@ function getMagicScore(plugin: IPlugin): number {
   const adjustedStars = plugin.star_count * starMultiplier;
   const starScore = Math.log1p(adjustedStars);
 
-  const daysSinceUpdate = (Date.now() - plugin.updated_at.getTime()) / (1000 * 60 * 60 * 24);
+  const daysSinceUpdate =
+    (Date.now() - plugin.last_human_commit_at.getTime()) / (1000 * 60 * 60 * 24);
   const recencyFactor = Math.pow(0.5, daysSinceUpdate / RECENCY_HALF_LIFE_DAYS);
 
   return starScore * (1 + RECENCY_WEIGHT * recencyFactor);

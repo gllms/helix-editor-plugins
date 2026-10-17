@@ -29,11 +29,11 @@
     </li>
     <li
       class="pill"
-      title={`Last push:\n${timeAgo(plugin.updated_at, true)}\n${plugin.updated_at.toLocaleString()}`}
+      title={`Last commit:\n${timeAgo(plugin.last_commit_at, true)}\n${plugin.last_commit_at.toLocaleString()}`}
     >
       <IconGitCommitFill />
-      <span class="visually-hidden">Last push:</span>
-      <TimeAgo date={plugin.updated_at} />
+      <span class="visually-hidden">Last commit:</span>
+      <TimeAgo date={plugin.last_commit_at} />
     </li>
     <li
       class="pill"

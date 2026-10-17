@@ -30,7 +30,7 @@ function pluginToSoftwareApplication(plugin: IPlugin) {
     applicationCategory: "DeveloperApplication",
     applicationSubCategory: "Helix editor plugin",
     dateCreated: plugin.created_at.toISOString(),
-    dateModified: plugin.updated_at.toISOString(),
+    dateModified: plugin.last_commit_at.toISOString(),
     keywords: plugin.tags?.join(", ") || "",
     interactionStatistic: {
       "@type": "InteractionCounter",
