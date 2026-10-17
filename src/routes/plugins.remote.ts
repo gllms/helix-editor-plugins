@@ -34,15 +34,26 @@ const enrichersBySourceId: Record<RepositorySourceId, PluginEnricher> = {
   github: enrichPluginGithub,
 };
 
+// The dev server reruns `getPlugins` on every request, which would otherwise quickly hit API rate limits
+const enrichedPluginsByRepository = new Map<string, Promise<IPlugin>>();
+
+function enrichPlugin(plugin: IPlugin): Promise<IPlugin> {
+  let enriched = enrichedPluginsByRepository.get(plugin.repository);
+  if (!enriched) {
+    enriched = enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin);
+    enriched.catch(() => enrichedPluginsByRepository.delete(plugin.repository));
+    enrichedPluginsByRepository.set(plugin.repository, enriched);
+  }
+  return enriched;
+}
+
 /**
  * Fetches the list of plugins from the JSON files in /plugins and enriches each with
  * additional information fetched from its repository host.
  */
 export const getPlugins = prerender<IPlugin[]>(async () => {
   return await Promise.all(
-    readPluginFiles().map((plugin) =>
-      enrichersBySourceId[getRepositorySource(plugin.repository).id](plugin),
-    ),
+    readPluginFiles().map(async (plugin) => ({ ...(await enrichPlugin(plugin)), ...plugin })),
   );
 });
 
