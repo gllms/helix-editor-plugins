@@ -1,0 +1,5 @@
+{
+  "description": "A cached, lazy file explorer",
+  "repository": "cosmincartas/groot.hx",
+  "tags": ["file-explorer", "files", "icons", "ui"]
+}

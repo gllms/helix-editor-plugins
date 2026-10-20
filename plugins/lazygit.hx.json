@@ -1,0 +1,5 @@
+{
+  "description": "Open lazygit in a floating window, and automatically reload your open buffers when you quit",
+  "repository": "bojohnson5/lazygit.hx",
+  "tags": ["integration", "ui", "version-control", "workflow"]
+}

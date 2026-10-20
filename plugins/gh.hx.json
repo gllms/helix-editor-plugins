@@ -1,0 +1,5 @@
+{
+  "description": "GitHub plugin powered by the gh CLI",
+  "repository": "matoous/gh.hx",
+  "tags": ["blame", "integration", "version-control", "workflow"]
+}

@@ -1,0 +1,5 @@
+{
+  "description": "Recent file picker plugin for Helix",
+  "repository": "mattwparas/recentf.hx",
+  "tags": ["files", "navigation", "picker", "projects"]
+}
