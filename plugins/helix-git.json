@@ -1,0 +1,5 @@
+{
+  "description": "See what used to be there: show the HEAD version of the current change or the whole file.",
+  "repository": "hardhus/helix-git",
+  "tags": ["integration", "version-control"]
+}
