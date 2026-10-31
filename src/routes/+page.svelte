@@ -32,9 +32,11 @@
     plugin.search_text = createSearchText(plugin);
   }
 
+  const DEFAULT_SORT_BY: SortBy = "magic";
+
   let searchQuery = $state<string>("");
-  let sortBy = $state<SortBy>("magic");
-  let sortDirection = $state<SortDirection>("desc");
+  let sortBy = $state<SortBy>(DEFAULT_SORT_BY);
+  let sortDirection = $state<SortDirection>(defaultSortDirection(DEFAULT_SORT_BY));
   let tagsCollapsible = $state<ReturnType<typeof Collapsible>>();
 
   const sidebarLayout = new MediaQuery("min-width: 60rem");
@@ -50,6 +52,12 @@
   let sortedPlugins = $derived(filterAndSortPlugins(plugins, searchQuery, sortBy, sortDirection));
 
   let jsonLd = $derived(generateJsonLd(sortedPlugins));
+
+  function resetSearch() {
+    searchQuery = "";
+    sortBy = DEFAULT_SORT_BY;
+    sortDirection = defaultSortDirection(sortBy);
+  }
 
   function searchForTag(tag: string) {
     searchQuery = "#" + tag;
@@ -128,9 +136,9 @@
 </svelte:head>
 
 <h1>
-  <button onclick={() => (searchQuery = "")} title="Clear search" aria-label="Clear search"
-    >Helix Editor Plugins</button
-  >
+  <button onclick={resetSearch} title="Clear search" aria-label="Clear search">
+    Helix Editor Plugins
+  </button>
 </h1>
 
 <div class="layout">
