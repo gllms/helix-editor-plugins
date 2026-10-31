@@ -4,8 +4,9 @@ import { getRepositorySource } from "./repositorySources";
 /** How many days it takes for the "recent activity" boost to halve. */
 const RECENCY_HALF_LIFE_DAYS = 60;
 
-/** How much a fully-fresh update can multiply the star score by. */
-const RECENCY_WEIGHT = 10;
+const STAR_WEIGHT = 1;
+const CREATION_RECENCY_WEIGHT = 4;
+const UPDATE_RECENCY_WEIGHT = 2;
 
 /** Strips everything but a tag's valid characters, so it can be safely used inside a dynamically built RegExp. */
 function sanitizeTag(tag: string): string {
@@ -14,14 +15,21 @@ function sanitizeTag(tag: string): string {
 
 function getMagicScore(plugin: IPlugin): number {
   const { starMultiplier } = getRepositorySource(plugin.repository);
-  const adjustedStars = plugin.star_count * starMultiplier;
+  const adjustedStars = (plugin.star_count + 1) * starMultiplier;
   const starScore = Math.log1p(adjustedStars);
+
+  const daysSinceCreation = (Date.now() - plugin.created_at.getTime()) / (1000 * 60 * 60 * 24);
+  const creationRecencyFactor = Math.pow(0.5, daysSinceCreation / RECENCY_HALF_LIFE_DAYS);
 
   const daysSinceUpdate =
     (Date.now() - plugin.last_human_commit_at.getTime()) / (1000 * 60 * 60 * 24);
-  const recencyFactor = Math.pow(0.5, daysSinceUpdate / RECENCY_HALF_LIFE_DAYS);
+  const updateRecencyFactor = Math.pow(0.5, daysSinceUpdate / RECENCY_HALF_LIFE_DAYS);
 
-  return starScore * (1 + RECENCY_WEIGHT * recencyFactor);
+  return (
+    STAR_WEIGHT * starScore +
+    CREATION_RECENCY_WEIGHT * creationRecencyFactor +
+    UPDATE_RECENCY_WEIGHT * updateRecencyFactor
+  );
 }
 
 export default function filterAndSortPlugins(
