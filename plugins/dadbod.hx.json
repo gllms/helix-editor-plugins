@@ -1,0 +1,5 @@
+{
+  "description": "Run SQL from a Helix buffer against a database: a vim-dadbod-like plugin for Helix's Steel plugin system",
+  "repository": "eloback/dadbod.hx",
+  "tags": ["integration", "language-support", "repl", "workflow"]
+}
