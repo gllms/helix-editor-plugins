@@ -1,5 +1,5 @@
 {
   "description": "A Helix-native Git UI written in Steel Scheme.",
   "repository": "j03-dev/xit.hx",
-  "tags": ["ui", "git", "version-control"]
+  "tags": ["integration", "ui", "version-control", "workflow"]
 }
